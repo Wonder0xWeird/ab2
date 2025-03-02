@@ -1,3 +1,2 @@
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
-export { default as RootLayout } from './RootLayout'; 
+// This file intentionally left empty.
+// Components will be added as they are implemented. 
