@@ -1,0 +1,66 @@
+# ABSTRACTU Development Guidelines
+
+## Project Description
+ABSTRACTU is an AI-powered creative writing and blogging platform hosted at ab2.is. The platform aims to blend artificial intelligence with human creativity to create unique writing experiences.
+
+## Technology Stack
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Vercel (deployment)
+- MongoDB (future implementation)
+
+## Architecture Principles
+1. Lightweight and performant frontend
+2. Component-based architecture
+3. Server-side rendering where beneficial
+4. Progressive enhancement
+5. Mobile-first responsive design
+
+## Code Style Guidelines
+1. Use TypeScript for type safety
+2. Follow ESLint rules
+3. Use functional components with hooks
+4. Prefer named exports over default exports
+5. Use descriptive variable and function names
+6. Document complex functions and components
+
+## Component Structure
+1. Group related components in directories
+2. Include index.ts files for clean exports
+3. Co-locate component tests with components
+4. Use a consistent naming convention
+
+## State Management
+1. Use React Context for global state
+2. Use React Query for server state
+3. Keep component state local when possible
+4. Minimize prop drilling
+
+## Performance Considerations
+1. Optimize images and assets
+2. Implement code splitting
+3. Use Next.js Image component
+4. Minimize JavaScript bundle size
+5. Implement proper caching strategies
+
+## Accessibility
+1. Follow WCAG 2.1 AA standards
+2. Use semantic HTML
+3. Ensure keyboard navigation
+4. Provide appropriate ARIA attributes
+5. Test with screen readers
+
+## Development Workflow
+1. Create feature branches
+2. Write tests for new features
+3. Review code before merging
+4. Document API changes
+5. Keep dependencies updated
+
+## Future Considerations
+1. User authentication system
+2. Content submission API
+3. AI integration for content generation
+4. Interactive story features
+5. Community collaboration tools

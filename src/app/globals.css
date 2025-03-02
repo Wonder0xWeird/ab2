@@ -1,24 +1,194 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: "Crimson Text";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/CrimsonText-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Crimson Text";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/CrimsonText-Bold.ttf);
+}
+
+@font-face {
+  font-family: "Crimson Text";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/CrimsonText-Italic.ttf);
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #222831;
+  --foreground: #e0e0e0;
+  --shadow: #141921;
+  --gold: #cc9c42;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #222831;
+    --foreground: #e0e0e0;
+    --shadow: #141921;
+    --gold: #cc9c42;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  text-shadow: 0 4px 4px var(--shadow);
+  background-image: url("/images/art/dark-exa.png");
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 20px 10px var(--shadow);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #029eff71;
+  border: 1px solid #0098a0b2;
+}
+
+@layer components {
+  .container {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Tablet component styling */
+  .tablet {
+    width: 100%;
+    border-radius: 9999px;
+    border: 1px solid var(--gold);
+    background-image: linear-gradient(to bottom, #393e46, #21252c);
+    box-shadow: 0 3px 10px 5px var(--shadow);
+    padding: 0.625rem 0.9375rem;
+  }
+
+  .tablet-button {
+    composes: tablet;
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+
+  .tablet-button:hover {
+    background-color: rgba(204, 156, 66, 0.1);
+  }
+
+  /* Button styling */
+  .btn-brand {
+    border-radius: 9999px;
+    border: 1px solid var(--gold);
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    font-weight: 400;
+    color: var(--foreground);
+    box-shadow: 0 3px 10px 5px var(--shadow);
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+
+  .btn-brand:hover {
+    background-color: rgba(204, 156, 66, 0.1);
+  }
+
+  .btn-brand:active,
+  .btn-brand:focus {
+    background-color: rgba(204, 156, 66, 0.25);
+  }
+
+  .btn-brand-active {
+    background-color: rgba(204, 156, 66, 0.25);
+  }
+
+  /* Writing content styling */
+  .writing {
+    width: 100%;
+    max-width: 1000px;
+    padding: 1.25rem;
+    text-align: justify;
+  }
+
+  .writing a {
+    color: var(--gold);
+  }
+
+  .writing hr {
+    margin: 1.25rem auto;
+    width: 100%;
+    border-top: 0;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .writing h1 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.875rem;
+    line-height: 1.25;
+  }
+
+  .writing h2 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    font-size: 1.5rem;
+  }
+
+  .writing h3 {
+    padding-bottom: 1.25rem;
+    text-align: right;
+    font-size: 1.25rem;
+  }
+
+  .writing p {
+    width: 100%;
+    padding-bottom: 0.625rem;
+    font-size: 1.125rem;
+  }
+
+  .writing ul,
+  .writing ol {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    padding-bottom: 0.625rem;
+    font-size: 1.125rem;
+  }
+
+  .writing li {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+
+  .writing blockquote {
+    margin: 1.25rem auto;
+    width: 85%;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-left: 3px solid var(--gold);
+    background-color: rgba(204, 156, 66, 0.1);
+    padding: 1.25rem;
+    font-size: 1.25rem;
+  }
 }
