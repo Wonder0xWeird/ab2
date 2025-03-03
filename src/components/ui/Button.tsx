@@ -4,13 +4,8 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'brand';
-type ButtonSize = 'sm' | 'md' | 'lg';
-
 interface ButtonProps {
   children: ReactNode;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
   href?: string;
   className?: string;
   isExternal?: boolean;
@@ -23,8 +18,6 @@ interface ButtonProps {
 
 export const Button = ({
   children,
-  variant = 'brand',
-  size = 'md',
   href,
   className = '',
   isExternal = false,

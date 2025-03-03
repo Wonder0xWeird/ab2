@@ -16,22 +16,22 @@ export const BlogPost = ({ content, title }: BlogPostProps) => {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            h1: ({ node, ...props }) => (
+            h1: ({ ...props }) => (
               <h1 {...props} />
             ),
-            h2: ({ node, ...props }) => (
+            h2: ({ ...props }) => (
               <h2 {...props} />
             ),
-            p: ({ node, ...props }) => (
+            p: ({ ...props }) => (
               <p {...props} />
             ),
-            em: ({ node, ...props }) => (
+            em: ({ ...props }) => (
               <em {...props} />
             ),
-            strong: ({ node, ...props }) => (
+            strong: ({ ...props }) => (
               <strong {...props} />
             ),
-            blockquote: ({ node, ...props }) => (
+            blockquote: ({ ...props }) => (
               <blockquote {...props} />
             ),
           }}
