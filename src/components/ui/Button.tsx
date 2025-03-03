@@ -23,7 +23,7 @@ interface ButtonProps {
 
 export const Button = ({
   children,
-  variant = 'primary',
+  variant = 'brand',
   size = 'md',
   href,
   className = '',
@@ -34,24 +34,7 @@ export const Button = ({
   active = false,
   icon,
 }: ButtonProps) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500';
-
-  const variantStyles = {
-    primary: 'bg-primary-600 hover:bg-primary-700 text-white shadow-sm',
-    secondary: 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm',
-    outline: 'border border-primary-600 text-primary-600 hover:bg-primary-50 dark:hover:bg-gray-800',
-    ghost: 'text-primary-600 hover:bg-primary-50 dark:hover:bg-gray-800',
-    brand: `btn-brand ${active ? 'btn-brand-active' : ''}`,
-  };
-
-  const sizeStyles = {
-    sm: 'text-sm px-3 py-2',
-    md: 'text-base  py-2',
-    lg: 'text-lg px-6 py-3',
-  };
-
-  // Only apply size styles if not using brand variant
-  const buttonStyles = `${baseStyles} ${variantStyles[variant]} ${variant !== 'brand' ? sizeStyles[size] : ''} ${className}`;
+  const buttonStyles = `btn-brand ${active ? 'btn-brand-active' : ''} ${className}`;
 
   const content = (
     <>
@@ -61,7 +44,7 @@ export const Button = ({
           alt=""
           width={24}
           height={24}
-          className="mr-2"
+          style={{ marginRight: '0.5rem' }}
         />
       )}
       {children}

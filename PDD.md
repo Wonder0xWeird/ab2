@@ -2,7 +2,10 @@
 
 ## Project Vision
 
-ABSTRACTU (Ab2) is an AI-powered creative writing and blogging platform that aims to blend artificial intelligence with human creativity to create unique writing experiences. The platform seeks to provide writers with tools that enhance their creative process rather than replace it.
+ABSTRACTU (Ab2) is a web channel that brings together some creative thoughts and applets
+in an attempt to both tell a story and describe a pattern.
+
+Where it fails at capturing the pattern's details, it aims at least to be entertaining.
 
 ## Target Audience
 
@@ -14,42 +17,24 @@ ABSTRACTU (Ab2) is an AI-powered creative writing and blogging platform that aim
 
 ## Core Features
 
-### Phase 1: Foundation (Current)
+### Phase 1: Foundation
 - Minimalist, distraction-free writing interface
 - Responsive design optimized for all devices
 - Custom typography and visual design
 - Basic content presentation
 
-### Phase 2: User Engagement
-- User authentication system
-- Profile creation and management
-- Content submission and publishing
-- Basic analytics for authors
-
-### Phase 3: AI Integration
-- AI-assisted writing tools
-- Content enhancement suggestions
-- Style analysis and recommendations
-- Automated editing assistance
-
-### Phase 4: Community Features
-- Collaborative writing spaces
-- Community feedback and comments
-- Featured content curation
-- User interaction and networking
-
-### Phase 5: Advanced Features
-- Interactive storytelling tools
-- Advanced analytics and insights
-- Personalized content recommendations
-- Premium features and subscription model
+### Phase 2: Content (Current)
+- Minimalist, distraction-free writing interface
+- Responsive design optimized for all devices
+- Custom typography and visual design
+- Basic content presentation
 
 ## Technical Architecture
 
 ### Frontend
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom design system
+- **Styling**: Custom CSS with modular design system
 - **State Management**: React Context and Server Components
 - **Animations**: CSS animations and transitions
 
@@ -87,52 +72,13 @@ ABSTRACTU (Ab2) is an AI-powered creative writing and blogging platform that aim
 
 ## Success Metrics
 
-- User engagement (time spent writing)
 - Content creation volume
-- User retention and return rate
-- Community growth and interaction
-- Feedback on AI-assisted features
 
-## Timeline
-
-### Phase 1 (Q1 2025)
-- Initial design and development
-- Core UI components
-- Basic content presentation
-- Deployment to production
-
-### Phase 2 (Q2 2025)
-- User authentication system
-- Content management
-- Profile creation
-- Basic analytics
-
-### Phase 3 (Q3 2025)
-- AI integration
-- Writing assistance tools
-- Content enhancement features
-- Style analysis
-
-### Phase 4 (Q4 2025)
-- Community features
-- Collaborative tools
-- Feedback systems
-- Content curation
-
-### Phase 5 (Q1 2026)
-- Interactive storytelling
-- Advanced analytics
-- Personalization
-- Premium features
 
 ## Risks and Challenges
 
 - AI technology limitations and ethical considerations
-- User adoption and engagement
-- Content moderation and quality control
-- Competition from established platforms
-- Technical scalability as user base grows
 
 ## Conclusion
 
-ABSTRACTU aims to create a unique space where technology enhances human creativity rather than replacing it. By focusing on a clean, minimalist design and gradually introducing AI-powered features, the platform will provide value to writers while maintaining the authenticity and uniqueness of human expression. 
+ABSTRACTU aims to create a unique space where technology augments human creativity rather than replaces it. Websites are not dead, and nor are web developers, if they chose to try something new ;)

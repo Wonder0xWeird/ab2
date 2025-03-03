@@ -1,21 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Font imports */
 @font-face {
-  font-family: "Crimson Text";
-  font-style: normal;
+  font-family: 'Crimson Text';
+  src: url('/fonts/CrimsonText-Regular.ttf') format('truetype');
   font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/CrimsonText-Regular.ttf);
+  font-style: normal;
 }
 
 @font-face {
-  font-family: "Crimson Text";
-  font-style: normal;
+  font-family: 'Crimson Text';
+  src: url('/fonts/CrimsonText-Bold.ttf') format('truetype');
   font-weight: 700;
-  font-display: swap;
-  src: url(/fonts/CrimsonText-Bold.ttf);
+  font-style: normal;
 }
 
 @font-face {
@@ -31,6 +26,7 @@
   --foreground: #e0e0e0;
   --shadow: #141921;
   --gold: #cc9c42;
+  --max-width: 1200px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,12 +38,145 @@
   }
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--background);
+}
+
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-sans);
+  font-family: 'Crimson Text', Georgia, serif;
+  line-height: 1.6;
+  min-height: 100vh;
   text-shadow: 0 4px 4px var(--shadow);
+}
+
+#background-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url("/images/art/dark-exa.png");
+  background-size: auto;
+  background-repeat: repeat;
+  z-index: -1;
+}
+
+/* Layout utilities */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Blog specific styles */
+.blog-post {
+  max-width: 65ch;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.blog-post h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.blog-post p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+/* Tablet component styles */
+.tablet {
+  background: rgba(20, 25, 33, 0.7);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 3px 10px 5px var(--shadow);
+  margin: 2rem 0;
+  backdrop-filter: blur(5px);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .blog-post {
+    padding: 0 1rem;
+  }
+
+  .tablet {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
 }
 
 /* Custom scrollbar styling */

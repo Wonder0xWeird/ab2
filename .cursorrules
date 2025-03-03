@@ -1,13 +1,13 @@
-# ABSTRACTU Development Guidelines
+# ABSTRACTU OBSERVER
 
-## Project Description
-ABSTRACTU is an AI-powered creative writing and blogging platform hosted at ab2.is. The platform aims to blend artificial intelligence with human creativity to create unique writing experiences.
+## Description
+Abstraction to abstraction, Ab2 is.
 
 ## Technology Stack
 - Next.js (App Router)
 - TypeScript
-- Tailwind CSS
-- Vercel (deployment)
+- Custom CSS
+- Vercel (deployment, serverless, cron)
 - MongoDB (future implementation)
 
 ## Architecture Principles
@@ -24,6 +24,8 @@ ABSTRACTU is an AI-powered creative writing and blogging platform hosted at ab2.
 4. Prefer named exports over default exports
 5. Use descriptive variable and function names
 6. Document complex functions and components
+7. Use CSS classes over inline styles
+8. Follow BEM-like naming for CSS classes
 
 ## Component Structure
 1. Group related components in directories
@@ -64,3 +66,4 @@ ABSTRACTU is an AI-powered creative writing and blogging platform hosted at ab2.
 3. AI integration for content generation
 4. Interactive story features
 5. Community collaboration tools
+6. Datanomics

@@ -19,8 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="font-crimson">
-        {children}
+      <body>
+        <div id="background-pattern" />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );

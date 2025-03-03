@@ -8,16 +8,16 @@ ABSTRACTU (Ab2) aims to provide a space where writers can leverage AI tools to e
 
 ## Technology Stack
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
-- **Styling**: Custom design system with responsive components
+- **Frontend**: Next.js 15 (App Router), TypeScript
+- **Styling**: Custom CSS with modular design system
 - **Deployment**: Vercel
 - **Database**: MongoDB (future implementation)
 
 ## Features
 
 - Clean, minimalist interface focused on writing
-- AI-assisted creative writing tools
-- Responsive design for all devices
+- Custom design system with responsive components
+- Fixed background pattern with smooth content scrolling
 - Dark mode by default
 - Custom typography with Crimson Text font
 
