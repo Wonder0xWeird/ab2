@@ -1,77 +1,55 @@
-# ABSTRACTU
+# MUSE
 
-ABSTRACTU is an AI-powered creative writing and blogging platform that blends artificial intelligence with human creativity to create unique writing experiences.
+## Overview
+MUSE (formerly ABSTRACTU) is an experimental spatial canvas for exploring philosophical content. The platform features a unique draggable viewport interface that allows users to navigate through content in a non-linear, explorative way.
 
-## Project Overview
+## Live Demo
+Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 
-ABSTRACTU (Ab2) aims to provide a space where writers can leverage AI tools to enhance their creative process, not replace it. The platform offers a clean, minimalist interface that puts the focus on the writing experience.
+## Key Features
+- Spatial canvas interface with draggable viewport
+- Philosophical content exploration
+- Minimalist design focused on typography
+- Responsive layout for various device sizes
+- Smooth animations and transitions
 
-## Features
+## Technical Stack
+- Next.js (App Router)
+- TypeScript
+- CSS Modules
+- Vercel Deployment
 
-- Clean, minimalist interface focused on writing
-- Interactive draggable grid layout for content exploration
-- MUSE section featuring philosophical writings with AI responses
-- Custom design system with responsive components
-- Beautiful animations and transitions
-- Fixed background pattern with smooth content scrolling
-- Dark mode by default
-- Custom typography with Crimson Text font
+## Local Development
+To run the project locally:
 
-## Technology Stack
+```bash
+# Clone the repository
+git clone https://github.com/your-username/ab2.git
 
-- **Frontend**: Next.js 15 (App Router), TypeScript
-- **Styling**: Custom CSS with modular design system
-- **Deployment**: Vercel
-- **Database**: MongoDB (future implementation)
+# Navigate to the project directory
+cd ab2
 
-## Development
+# Install dependencies
+npm install
 
-### Prerequisites
+# Run the development server
+npm run dev
+```
 
-- Node.js 18.17 or later
-- npm or yarn
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-### Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/ab2.git
-   cd ab2
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
-
-## Architecture
-
-ABSTRACTU follows a component-based architecture with a focus on:
-
-- Lightweight and performant frontend
-- Server-side rendering where beneficial
-- Progressive enhancement
-- Mobile-first responsive design
+## Project Structure
+- `src/app`: Next.js app router pages
+- `src/components`: Reusable React components
+- `src/styles`: Global styles and theme configuration
+- `content`: Markdown content for blog posts and philosophical pieces
 
 ## Contributing
-
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
-
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contact
-
-For any inquiries, please reach out to [your-email@example.com](mailto:your-email@example.com).
+## Acknowledgements
+- Special thanks to Claude for philosophical insights
+- Inspired by spatial interfaces and non-linear content exploration
