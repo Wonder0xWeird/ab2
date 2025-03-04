@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState, useRef, useEffect } from 'react';
+import { ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 
 interface DraggableGridProps {
   children: ReactNode[];
@@ -23,28 +23,7 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
     verticalOffset: 30
   });
 
-  // Calculate row heights based on item content
-  useEffect(() => {
-    calculateRowHeights();
-    // Add window resize listener
-    window.addEventListener('resize', calculateRowHeights);
-
-    // Add global mouse up handler
-    const handleGlobalMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-      }
-    };
-
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-
-    return () => {
-      window.removeEventListener('resize', calculateRowHeights);
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
-    };
-  }, [isDragging]);
-
-  const calculateRowHeights = () => {
+  const calculateRowHeights = useCallback(() => {
     if (itemRefs.current.length === 0) return;
 
     const newRowHeights: number[] = [];
@@ -68,9 +47,30 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
     });
 
     setRowHeights(newRowHeights);
-  };
+  }, [gridSize.cols]);
 
-  const findTitlePosition = () => {
+  // Add window resize listener
+  useEffect(() => {
+    calculateRowHeights();
+
+    window.addEventListener('resize', calculateRowHeights);
+
+    // Add global mouse up handler
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+      }
+    };
+
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      window.removeEventListener('resize', calculateRowHeights);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, calculateRowHeights]);
+
+  const findTitlePosition = useCallback(() => {
     // Find the title item
     const titleIndex = children.findIndex((child, i) => {
       const el = itemRefs.current[i];
@@ -93,7 +93,7 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
       x: col * (gridSize.cellSize + gridSize.gap),
       y: top + columnOffset
     };
-  };
+  }, [children, gridSize.cellSize, gridSize.cols, gridSize.gap, gridSize.verticalOffset, rowHeights]);
 
   // Calculate total grid dimensions
   const gridWidth = gridSize.cols * (gridSize.cellSize + gridSize.gap);
@@ -127,8 +127,8 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
 
     // Force a reflow to ensure the initial opacity is applied
     if (containerRef.current) {
-      // Fix the expression issue by actually using the result
-      const _ = containerRef.current.offsetHeight;
+      // Simply trigger reflow without assigning to unused variable
+      containerRef.current.getBoundingClientRect();
     }
 
     // Add a delay before starting the centering animation
