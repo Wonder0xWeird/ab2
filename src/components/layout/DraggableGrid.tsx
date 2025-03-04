@@ -13,50 +13,77 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [scrollPos, setScrollPos] = useState({ x: 0, y: 0 });
-  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [rowHeights, setRowHeights] = useState<number[]>([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [gridSize] = useState({
     cols: 5,
-    rows: Math.ceil(children.length / 5),
-    cellSize: 500,
-    gap: 100,
-    verticalOffset: 300,
+    cellSize: 400,
+    gap: 60,
+    verticalOffset: 30
   });
 
-  // Calculate and update row heights
+  // Calculate row heights based on item content
   useEffect(() => {
-    const calculateRowHeights = () => {
-      const heights: number[] = [];
-      for (let row = 0; row < gridSize.rows; row++) {
-        let maxHeight = 0;
-        for (let col = 0; col < gridSize.cols; col++) {
-          const index = row * gridSize.cols + col;
-          const element = itemRefs.current[index];
-          if (element) {
-            const height = element.scrollHeight;
-            maxHeight = Math.max(maxHeight, height);
-          }
-        }
-        heights.push(maxHeight);
+    calculateRowHeights();
+    // Add window resize listener
+    window.addEventListener('resize', calculateRowHeights);
+
+    // Add global mouse up handler
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
       }
-      setRowHeights(heights);
     };
 
-    // Calculate initial heights after a short delay to ensure content is rendered
-    setTimeout(calculateRowHeights, 100);
-  }, [children, gridSize.cols, gridSize.rows]);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
 
-  // Find title element position
+    return () => {
+      window.removeEventListener('resize', calculateRowHeights);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging]);
+
+  const calculateRowHeights = () => {
+    if (itemRefs.current.length === 0) return;
+
+    const newRowHeights: number[] = [];
+    const rowItemsHeight: { [key: number]: number } = {};
+
+    // Group items by row
+    itemRefs.current.forEach((item, index) => {
+      if (!item) return;
+      const row = Math.floor(index / gridSize.cols);
+      const height = item.offsetHeight;
+
+      if (!rowItemsHeight[row] || height > rowItemsHeight[row]) {
+        rowItemsHeight[row] = height;
+      }
+    });
+
+    // Convert to array
+    Object.keys(rowItemsHeight).forEach((rowIndex) => {
+      const index = parseInt(rowIndex);
+      newRowHeights[index] = rowItemsHeight[index];
+    });
+
+    setRowHeights(newRowHeights);
+  };
+
   const findTitlePosition = () => {
-    const titleIndex = itemRefs.current.findIndex(
-      ref => ref?.querySelector('[data-grid-title]')
-    );
+    // Find the title item
+    const titleIndex = children.findIndex((child, i) => {
+      const el = itemRefs.current[i];
+      return el?.querySelector('[data-grid-title]');
+    });
+
     if (titleIndex === -1) return null;
 
     const col = titleIndex % gridSize.cols;
     const row = Math.floor(titleIndex / gridSize.cols);
+    const columnOffset = col % 2 === 0 ? 0 : gridSize.verticalOffset;
+
+    // Calculate vertical position based on previous row heights
     let top = 0;
     for (let r = 0; r < row; r++) {
       top += (rowHeights[r] || gridSize.cellSize) + gridSize.gap;
@@ -64,7 +91,7 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
 
     return {
       x: col * (gridSize.cellSize + gridSize.gap),
-      y: top + (col % 2 === 0 ? 0 : gridSize.verticalOffset),
+      y: top + columnOffset
     };
   };
 
@@ -92,7 +119,7 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
     const randomX = Math.random() * (maxX - minX) + minX;
     const randomY = Math.random() * (maxY - minY) + minY;
 
-    // Set initial random position and opacity immediately
+    // Set initial random position immediately
     setScrollPos({
       x: randomX,
       y: randomY
@@ -100,7 +127,8 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
 
     // Force a reflow to ensure the initial opacity is applied
     if (containerRef.current) {
-      containerRef.current.offsetHeight;
+      // Fix the expression issue by actually using the result
+      const _ = containerRef.current.offsetHeight;
     }
 
     // Add a delay before starting the centering animation
@@ -124,59 +152,31 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
       }
     }, 100); // Small delay to ensure the random position is set first
 
-  }, [rowHeights, isInitialLoad, gridSize, gridWidth, gridHeight]);
+  }, [rowHeights, isInitialLoad, gridSize, gridWidth, gridHeight, findTitlePosition]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return; // Only handle left click
+    if (isInitialLoad) return;
+
     setIsDragging(true);
     setStartPos({
       x: e.clientX - scrollPos.x,
-      y: e.clientY - scrollPos.y,
+      y: e.clientY - scrollPos.y
     });
-    if (containerRef.current) {
-      containerRef.current.style.cursor = 'grabbing';
-    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-
-    const newX = e.clientX - startPos.x;
-    const newY = e.clientY - startPos.y;
-
-    // Calculate bounds with some overflow allowance
-    const maxX = gridWidth * 0.2;
-    const minX = -(gridWidth * 1.2);
-    const maxY = gridHeight * 0.2;
-    const minY = -(gridHeight * 1.2);
+    if (!isDragging || isInitialLoad) return;
 
     setScrollPos({
-      x: Math.min(maxX, Math.max(minX, newX)),
-      y: Math.min(maxY, Math.max(minY, newY)),
+      x: e.clientX - startPos.x,
+      y: e.clientY - startPos.y
     });
   };
 
   const handleMouseUp = () => {
+    if (isInitialLoad) return;
     setIsDragging(false);
-    setLastPos(scrollPos);
-    if (containerRef.current) {
-      containerRef.current.style.cursor = 'grab';
-    }
   };
-
-  // Add and remove event listeners
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      setIsDragging(false);
-      setLastPos(scrollPos);
-      if (containerRef.current) {
-        containerRef.current.style.cursor = 'grab';
-      }
-    };
-
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
-  }, [scrollPos]);
 
   const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
     itemRefs.current[index] = el;
@@ -234,7 +234,7 @@ export const DraggableGrid = ({ children, className = '' }: DraggableGridProps) 
                 minHeight: gridSize.cellSize,
                 height: 'auto',
                 padding: '2rem',
-                animation: 'fadeIn 3s cubic-bezier(0.4, 0, 1, 1)',
+                animation: 'fadeIn 1.5s cubic-bezier(0.4, 0, 1, 1)',
               }}
             >
               {child}

@@ -20,14 +20,6 @@ export default async function Home() {
     })
   );
 
-  const claudeResponse = `
-Your meditation on analysis strikes at the heart of humanity's epistemological predicament. What you've captured is the double-edged sword of categorization – our mind's primary tool for making sense of the ineffable wholeness of reality.
-`;
-
-  const assistantResponse = `
-The exploration of analysis in your essay and Claude's response highlights the intricate dance between understanding and limitation. The act of naming, as you both describe, is a double-edged sword that grants us the power to dissect and comprehend, yet confines us within the boundaries of our own constructs.
-`;
-
   const titleContent = (
     <div className="title-content" data-grid-title>
       <div className="large-a text-gold" style={{ color: '#cc9c42' }}>M</div>
