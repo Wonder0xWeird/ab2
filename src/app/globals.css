@@ -135,21 +135,34 @@ p {
 
 /* Blog specific styles */
 .blog-post {
-  max-width: 65ch;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.blog-post::-webkit-scrollbar {
+  width: 4px;
+}
+
+.blog-post::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
 }
 
 .blog-post h1 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
+  color: var(--gold);
 }
 
 .blog-post p {
   font-size: 1.125rem;
   line-height: 1.8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: justify;
 }
 
@@ -320,4 +333,93 @@ p {
     padding: 1.25rem;
     font-size: 1.25rem;
   }
+}
+
+/* Grid Layout Styles */
+.viewport-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.viewport-container.dragging {
+  cursor: grabbing;
+}
+
+.grid-container {
+  position: absolute;
+  transition: transform 0.1s cubic-bezier(0.2, 0, 0.3, 1);
+  will-change: transform;
+}
+
+.grid-container.dragging {
+  transition: none;
+}
+
+.grid-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+  background: transparent;
+}
+
+.grid-item:hover {
+  opacity: 0.9;
+}
+
+.grid-item::-webkit-scrollbar {
+  width: 4px;
+}
+
+.grid-item::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+
+/* React Grid Layout Overrides */
+.react-grid-item.react-grid-placeholder {
+  background: var(--gold);
+  opacity: 0.2;
+  border-radius: 8px;
+  transition-duration: 100ms;
+}
+
+.react-resizable-handle {
+  border-radius: 0 0 8px 0;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.react-resizable-handle:hover {
+  opacity: 1;
+}
+
+/* Title content styles */
+.title-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: inherit;
+  padding: 2rem;
+}
+
+.title-content h1 {
+  font-size: 4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.title-content .large-a {
+  font-size: 10rem;
+  line-height: 1;
+  margin-bottom: -1rem;
 }

@@ -6,20 +6,23 @@ ABSTRACTU is an AI-powered creative writing and blogging platform that blends ar
 
 ABSTRACTU (Ab2) aims to provide a space where writers can leverage AI tools to enhance their creative process, not replace it. The platform offers a clean, minimalist interface that puts the focus on the writing experience.
 
+## Features
+
+- Clean, minimalist interface focused on writing
+- Interactive draggable grid layout for content exploration
+- MUSE section featuring philosophical writings with AI responses
+- Custom design system with responsive components
+- Beautiful animations and transitions
+- Fixed background pattern with smooth content scrolling
+- Dark mode by default
+- Custom typography with Crimson Text font
+
 ## Technology Stack
 
 - **Frontend**: Next.js 15 (App Router), TypeScript
 - **Styling**: Custom CSS with modular design system
 - **Deployment**: Vercel
 - **Database**: MongoDB (future implementation)
-
-## Features
-
-- Clean, minimalist interface focused on writing
-- Custom design system with responsive components
-- Fixed background pattern with smooth content scrolling
-- Dark mode by default
-- Custom typography with Crimson Text font
 
 ## Development
 
