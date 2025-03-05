@@ -26,7 +26,7 @@ export default async function MusePage() {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   // Create appropriate URL for observer
-  const observerUrl = isDevelopment ? '/observer' : 'https://observer.ab2.is';
+  const observerUrl = isDevelopment ? '/observer' : 'https://observer.ab2.observer';
 
   // Create the title content
   const titleContent = (
