@@ -1,10 +1,10 @@
 import React from 'react';
-import { StandardLayout } from '../../components/layout/StandardLayout';
 import { DraggableGrid } from '../../components/layout/DraggableGrid';
 import { promises as fs } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { BlogPost } from '../../components/blog/BlogPost';
+import Link from 'next/link';
 
 export default async function MusePage() {
   // Read all markdown files from the muse directory
@@ -22,16 +22,38 @@ export default async function MusePage() {
     })
   );
 
+  // Check if we're in development mode
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
+  // Create appropriate URL for observer
+  const observerUrl = isDevelopment ? '/observer' : 'https://observer.ab2.is';
+
+  // Create the title content
+  const titleContent = (
+    <div className="title-content" data-grid-title>
+      <div className="large-letter">M</div>
+      <h1 className="muse-title-text">MUSE</h1>
+      <p className="tagline">
+        Hmmm...
+      </p>
+      <Link href={observerUrl} className="back-button">
+        <div className="back-button-letter">O</div>
+      </Link>
+    </div>
+  );
+
   // Create grid items from the posts
   const gridItems = posts.map((post, i) => (
     <BlogPost key={i} content={post.content} title={post.data.title} />
   ));
 
+  // Insert the title in the middle of the grid
+  const centerIndex = Math.floor(gridItems.length / 2);
+  gridItems.splice(centerIndex, 0, titleContent);
+
   return (
-    <StandardLayout>
-      <DraggableGrid>
-        {gridItems}
-      </DraggableGrid>
-    </StandardLayout>
+    <DraggableGrid>
+      {gridItems}
+    </DraggableGrid>
   );
 } 

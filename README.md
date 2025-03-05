@@ -1,12 +1,13 @@
-# MUSE
+# ABSTRACTU
 
 ## Overview
-MUSE (formerly ABSTRACTU) is an experimental spatial canvas for exploring philosophical content. The platform features a unique draggable viewport interface that allows users to navigate through content in a non-linear, explorative way.
+ABSTRACTU (Ab2) is an experimental web platform for exploring philosophical content. The project features both an engaging homepage with interactive animations and a MUSE interface with a unique draggable viewport that allows users to navigate through content in a non-linear, explorative way.
 
 ## Live Demo
 Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 
 ## Key Features
+- Interactive homepage with dynamic "A" logo animation
 - Spatial canvas interface with draggable viewport
 - Philosophical content exploration
 - Minimalist design focused on typography
@@ -16,7 +17,7 @@ Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 ## Technical Stack
 - Next.js (App Router)
 - TypeScript
-- CSS Modules
+- Custom CSS animations
 - Vercel Deployment
 
 ## Local Development
@@ -41,8 +42,23 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 ## Project Structure
 - `src/app`: Next.js app router pages
 - `src/components`: Reusable React components
-- `src/styles`: Global styles and theme configuration
-- `content`: Markdown content for blog posts and philosophical pieces
+- `src/styles`: Global styles and animation definitions
+- `content`: Markdown content for philosophical pieces
+
+## Animation Features
+The project includes several sophisticated animation techniques:
+- Multi-stage entrance animation for the homepage logo
+- Continuous subtle floating animation for ambient movement
+- Interactive hover effects with scaling, rotation, and color changes
+- Pulsating glow effects using CSS filters and text-shadow
+- Smooth transitions between animation states
+
+## Future Development
+- Expansion of the OBSERVER section
+- User authentication system
+- Content submission API
+- AI integration for content generation
+- Community collaboration tools
 
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.

@@ -4,7 +4,7 @@ date: "2023-08-14"
 description: "A philosophical exploration of consciousness, naming, and the fragmentation of wholeness"
 ---
 
-The power and the limit of the named being as a conscious speck amongst an endless expanse of possibility is to lyse the space around it and in so doing grant these separate pieces names unto themselves such that together this lysate might at first stand robustly apart from the totality, enabling the being to manipulate That Thing in its likeness, beyond its manifest yet below its true resolution.
+The power and the limit of the named being as a conscious speck amongst an endless expanse of possibility is to lyse the space around it and in so doing grant these separate pieces names unto themselves such that together this lysate might at last stand robustly apart from the totality, enabling the being to manipulate That Thing in its likeness, beyond its manifest yet below its true resolution.
 
 Together these shadowy vessels, a fragmented set of the wholeness, stand pieced and puzzled and merely glimpsed upon to construct the being's worldview (umwelt), thus granting it a competency, while shallow, unfound in those other things that came before it and which serve as its substrate.
 

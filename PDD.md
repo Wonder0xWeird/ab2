@@ -17,17 +17,19 @@ Where it fails at capturing the pattern's details, it aims at least to be entert
 
 ## Core Features
 
-### Phase 1: Foundation
+### Phase 1: Foundation (Complete)
 - Minimalist, distraction-free writing interface
 - Responsive design optimized for all devices
 - Custom typography and visual design
+- Dynamic homepage animation with interactive elements
 - Basic content presentation
 
 ### Phase 2: Content (Current)
-- Minimalist, distraction-free writing interface
-- Responsive design optimized for all devices
-- Custom typography and visual design
-- Basic content presentation
+- Spatial canvas interface with draggable viewport
+- Philosophical content exploration
+- Responsive grid layout for content organization
+- Interactive animations and transitions
+- Enhanced user navigation experience
 
 ## Technical Architecture
 
@@ -36,7 +38,7 @@ Where it fails at capturing the pattern's details, it aims at least to be entert
 - **Language**: TypeScript
 - **Styling**: Custom CSS with modular design system
 - **State Management**: React Context and Server Components
-- **Animations**: CSS animations and transitions
+- **Animations**: CSS animations and transitions for enhanced interactivity
 
 ### Data Models
 
@@ -70,7 +72,7 @@ Example implementation for page titles across the site:
 
 ### Deployment
 - **Platform**: Vercel
-- **Domain**: ab2.is
+- **Domain**: ab2.is (primary), muse.ab2.observer (current)
 - **CI/CD**: GitHub Actions
 
 ## Design Principles
@@ -80,6 +82,7 @@ Example implementation for page titles across the site:
 3. **Accessibility**: WCAG 2.1 AA compliance
 4. **Performance**: Fast load times and smooth interactions
 5. **Consistency**: Unified design language throughout the platform
+6. **Animation**: Thoughtful, purposeful animations that enhance the user experience
 
 ## Brand Identity
 
@@ -92,27 +95,31 @@ Example implementation for page titles across the site:
 - **Typography**: 
   - Primary: Crimson Text (serif)
   - Secondary: Inter (sans-serif)
-- **Visual Style**: Elegant, minimalist with subtle animations
+- **Visual Style**: Elegant, minimalist with engaging animations
 
 ## Success Metrics
 
 - Content creation volume
-
+- User engagement with interactive elements
+- Time spent exploring the spatial canvas
 
 ## Risks and Challenges
 
 - AI technology limitations and ethical considerations
+- Animation performance on lower-end devices
+- Browser compatibility for advanced CSS features
 
 ## Conclusion
 
 ABSTRACTU aims to create a unique space where technology augments human creativity rather than replaces it. Websites are not dead, and nor are web developers, if they chose to try something new ;)
 
 ### Sections & Pages
-- **Home**: Landing page with project overview
+- **Home**: Landing page with interactive "A" logo animation
 - **MUSE**: Interactive grid layout with philosophical writings
 - **OBSERVER**: Content analysis and patterns (future implementation)
 
 ### User Experience
+- Engaging homepage with animated introduction
 - Draggable grid interface for content exploration
 - Smooth animations and transitions
 - Responsive design for all device sizes
@@ -139,11 +146,13 @@ MUSE (formerly ABSTRACTU) is an experimental spatial canvas for exploring philos
 - Fade-in animations for grid items
 - Smooth transitions for scrolling and dragging
 - Performance optimizations using `useCallback` hooks for event handlers
+- Enhanced homepage animation with interactive hover effects
 
 #### Responsive Design
 - Adjustable grid layout based on screen size
 - Proper touch event handling for mobile devices
 - Fallback styles for browsers without certain features
+- Consistent experience across various device sizes
 
 ### Deployment Architecture
 - Vercel hosting with continuous deployment
@@ -161,10 +170,10 @@ MUSE (formerly ABSTRACTU) is an experimental spatial canvas for exploring philos
 - Analytics dashboard for content creators
 
 ## Current Status
-The project has been successfully deployed to production at muse.ab2.observer. The MUSE interface with draggable viewport is fully functional, providing users with a unique way to explore philosophical content.
+The project includes a fully functional MUSE interface with draggable viewport and an engaging homepage with interactive animations. All components have been tested and optimized for deployment, providing users with a unique way to explore philosophical content through an innovative interface.
 
 ## Monitoring and Maintenance
 - Regular performance monitoring using Vercel analytics
 - Periodic code quality reviews and dependency updates
 - User feedback collection for iterative improvements
-- Continuous enhancement of the dragging experience
+- Continuous enhancement of the animation and dragging experience
