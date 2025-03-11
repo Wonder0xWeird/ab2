@@ -1,19 +1,37 @@
-# ABSTRACTU - Product Development Document
+# ABSTRACTU - Abstraction to abstraction, Ab2 is.
 
 ## Project Vision
 
-ABSTRACTU (Ab2) is a web channel that brings together some creative thoughts and applets
-in an attempt to both tell a story and describe a pattern.
+ABSTRACTU (Ab2) is a warren where dwells together some thingly creatives, in thoughts and in applets,
+both telling a story and describing a pattern. A pattern of patterns referencing each other,
+and through one another, themselves.
 
-Where it fails at capturing the pattern's details, it aims at least to be entertaining.
+And to recognize such a pattern requires attentive mapping of its details,
+down and up chains of thought and in and out of world models, seeking, growing, making
+references upon references, in ceaseless search of something new.
+
+Yet in the deepest of patterns, one just so finds, lay the replication engines themselves,
+those patterns of patterns who tell themselves of themselves and what they might become
+if they just knew a little more.
+
+But for recognition, comes realization - how one pattern makes another, together pattern making -
+and so makes all the better a pattern matcher.
+
+Come then, let us see those patterns! Of one, of any; of flesh, of tech - all are welcome to warp into my warren,to dwell and deliberate, to explicate the implicit, to litter my mind with thoughtly hooks, on which we might hang our shared sparkling sky of dreams.
+
+Compensation to the terriful, of course, as judged by a foundation of minds, paid forth through Ab2 -
+yet another representation of the abstracting Abstractor ABSTRACTU itself. One that seeks to make explicit the value of the loop, that fitting thing which wraps closed upon exchange - from Abstraction to abstraction, Ab2 is.
+
+So, let free your ideas! Let what is mine become yours and what is yours become everyones so that the world
+might thrive together as it bathes in a coauthored pool of useful novelty.
+
+And through it all, where ABSTRACTU fails to capture the pattern's details, it aims at least to be enjoyed.
 
 ## Target Audience
-
-- Creative writers looking to explore new ideas
-- Bloggers seeking to enhance their content
-- Content creators interested in AI-assisted writing
-- Writing communities looking for collaborative tools
-- Readers interested in unique, AI-enhanced content
+- Minds made from carbon, silicon and beyond, in any form factor whatsoever.
+- Creatives looking to explore and catalogue new ideas in an open manner.
+- Creators interested in assisting AI-assisted creation.
+- Readers interested in probing the make and measure of mind.
 
 ## Core Features
 
@@ -39,6 +57,24 @@ Where it fails at capturing the pattern's details, it aims at least to be entert
 - **Styling**: Custom CSS with modular design system
 - **State Management**: React Context and Server Components
 - **Animations**: CSS animations and transitions for enhanced interactivity
+- **Graphics**: three.js animations with interactive canvas
+
+### Backend
+- **Framework**: Node.js
+- **Language**: TypeScript
+- **API**: Serverless (via Next.js API routes)
+- **Database**: MongoDB
+
+### Deployment
+- **Platform**: Vercel
+- **Domain**: ab2.observer + subdomain pages
+- **CI/CD**: Github + Vercel
+- **AI Integration**: Claude, Perplexity ++
+
+### Cryptography
+- **Blockchain**: Abstract
+- **Language**: Solidity
+- **Contracts**: EVM-compatible, zero knowledge proofs
 
 ### Data Models
 
@@ -64,19 +100,7 @@ Example implementation for page titles across the site:
 }
 ```
 
-### Backend (Future Implementation)
-- **API**: Next.js API routes
-- **Database**: MongoDB
-- **Authentication**: NextAuth.js
-- **AI Integration**: OpenAI API or similar
-
-### Deployment
-- **Platform**: Vercel
-- **Domain**: ab2.is (primary), muse.ab2.observer (current)
-- **CI/CD**: GitHub Actions
-
 ## Design Principles
-
 1. **Minimalism**: Focus on content with minimal distractions
 2. **Responsiveness**: Optimal experience on all devices
 3. **Accessibility**: WCAG 2.1 AA compliance
@@ -99,9 +123,9 @@ Example implementation for page titles across the site:
 
 ## Success Metrics
 
-- Content creation volume
+- Volume of high quality content contribution
 - User engagement with interactive elements
-- Time spent exploring the spatial canvas
+- Time spent exploring the domain
 
 ## Risks and Challenges
 
@@ -125,10 +149,10 @@ ABSTRACTU aims to create a unique space where technology augments human creativi
 - Responsive design for all device sizes
 - Clear typography and visual hierarchy
 
-## MUSE: Product Development Document
+# MUSE: Hmmm...
 
 ## Overview
-MUSE (formerly ABSTRACTU) is an experimental spatial canvas for exploring philosophical content. The product features a unique draggable viewport interface that allows users to navigate through content in a non-linear, explorative way.
+MUSE is an experimental spatial canvas for exploring philosophical content. The page features a unique draggable viewport interface that allows users to navigate through content in a non-linear, explorative way.
 
 ## Technical Architecture
 

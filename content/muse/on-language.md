@@ -1,5 +1,5 @@
 ---
-title: "The Language"
+title: "On Language"
 date: "8-20-2019"
 ---
 
