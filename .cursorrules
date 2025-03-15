@@ -9,6 +9,9 @@ Abstraction to abstraction, Ab2 is.
 - Custom CSS
 - Vercel (deployment, serverless, cron)
 - MongoDB (future implementation)
+- Solidity (smart contracts)
+- Hardhat (contract development)
+- Abstract Blockchain (EVM-compatible)
 
 ## Architecture Principles
 1. Lightweight and performant frontend
@@ -17,6 +20,8 @@ Abstraction to abstraction, Ab2 is.
 4. Progressive enhancement
 5. Mobile-first responsive design
 6. Consistent pattern integration across sections
+7. Modular contract design with facet architecture
+8. Upgradeable contracts following EIP-2535
 
 ## Code Style Guidelines
 1. Use TypeScript for type safety
@@ -27,6 +32,8 @@ Abstraction to abstraction, Ab2 is.
 6. Document complex functions and components
 7. Use CSS classes over inline styles
 8. Follow BEM-like naming for CSS classes
+9. Follow Solidity style guide for smart contracts
+10. Implement extensive validation in contract functions
 
 ## Component Structure
 1. Group related components in directories
@@ -50,12 +57,38 @@ Abstraction to abstraction, Ab2 is.
 4. Use gradient underlines for visual hierarchy
 5. Ensure documentation reflects the ABSTRACTU design language
 6. Create mobile-responsive navigation for all documentation
+7. Document all contract functions with NatSpec comments
+8. Include detailed explanations of contract interactions
+
+## Smart Contract Development
+1. Implement Diamond Standard (EIP-2535) for all contracts
+2. Organize functionality into logical facets
+3. Write comprehensive tests for all contract functions
+4. Use TypeScript for contract testing and deployment
+5. Follow best practices for gas optimization
+6. Minimize storage usage through efficient data structures
+7. Document all functions with NatSpec comments
+8. Implement strict access control mechanisms
+9. Prepare upgrade paths for all contract functionality
+10. Use events for tracking state changes and off-chain indexing
+
+## Contract Testing
+1. Unit test individual facet functions
+2. Integration test facet interactions
+3. Deploy to local hardhat network before testnet
+4. Verify all functions on Abstract testnet
+5. Use gas reporting for optimization
+6. Test upgrade mechanisms thoroughly
+7. Simulate adversarial conditions
+8. Document test coverage metrics
 
 ## State Management
 1. Use React Context for global state
 2. Use React Query for server state
 3. Keep component state local when possible
 4. Minimize prop drilling
+5. Use contract events for blockchain state updates
+6. Implement optimistic UI updates for blockchain interactions
 
 ## Performance Considerations
 1. Optimize images and assets
@@ -64,6 +97,8 @@ Abstraction to abstraction, Ab2 is.
 4. Minimize JavaScript bundle size
 5. Implement proper caching strategies
 6. Keep CSS selectors efficient
+7. Optimize contract functions for gas efficiency
+8. Batch blockchain operations when possible
 
 ## Accessibility
 1. Follow WCAG 2.1 AA standards
@@ -72,6 +107,7 @@ Abstraction to abstraction, Ab2 is.
 4. Provide appropriate ARIA attributes
 5. Test with screen readers
 6. Maintain sufficient color contrast
+7. Ensure blockchain interactions are clear and understandable
 
 ## Development Workflow
 1. Create feature branches
@@ -80,6 +116,9 @@ Abstraction to abstraction, Ab2 is.
 4. Document API changes
 5. Keep dependencies updated
 6. Regularly refactor CSS for maintainability
+7. Test contracts locally before deployment
+8. Use deployment scripts for consistent contract deployment
+9. Document contract addresses and versions
 
 ## Future Considerations
 1. User authentication system
@@ -88,3 +127,6 @@ Abstraction to abstraction, Ab2 is.
 4. Interactive story features
 5. Community collaboration tools
 6. Datanomics
+7. Tokenomic incentive mechanisms
+8. DAO governance for protocol decisions
+9. Zero-knowledge proofs for privacy features

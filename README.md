@@ -14,11 +14,16 @@ Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 - Responsive layout for various device sizes
 - Smooth animations and transitions
 - Cohesive documentation interface with background pattern integration
+- Diamond Standard smart contracts for upgradeable blockchain integration
+- Content submission and evaluation system (in development)
 
 ## Technical Stack
 - Next.js (App Router)
 - TypeScript
 - Custom CSS animations
+- Solidity smart contracts
+- Hardhat development environment
+- Abstract Blockchain (EVM-compatible)
 - Vercel Deployment
 
 ## Local Development
@@ -46,6 +51,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 - `src/styles`: Global styles and animation definitions
 - `content`: Markdown content for philosophical pieces
 - `docs`: Documentation markdown files
+- `contracts`: Smart contract code and deployment scripts
 
 ## Animation Features
 The project includes several sophisticated animation techniques:
@@ -63,7 +69,24 @@ The documentation section features:
 - Gradient underlines for section headings
 - Mobile-responsive layout with adaptive navigation
 
-## Cryptographic Implementation (New)
+## Smart Contract Implementation
+The project implements a blockchain component using the Diamond Standard (EIP-2535):
+
+- **Diamond Architecture**: Upgradeable contract system with multiple facets
+- **Core Facets**:
+  - DiamondCut: Manages contract upgrades
+  - DiamondLoupe: Provides contract introspection
+  - Ownership: Handles access control
+  - Submission: Manages content contributions
+- **Development Environment**:
+  - Hardhat for local development and testing
+  - TypeScript for type-safe contract interaction
+  - Comprehensive test suite for all facets
+  - Deployment scripts for testnet and mainnet
+
+The smart contract implementation aims to create an incentive mechanism for contributing valuable knowledge while making it accessible through a decentralized approach.
+
+## Cryptographic Implementation
 We're expanding ABSTRACTU with a blockchain component using the Diamond Standard (EIP-2535):
 
 - **Smart Contract Architecture**: Implementing upgradeable contracts that will facilitate a system for contributing and evaluating knowledge
@@ -79,6 +102,8 @@ The cryptographic implementation aims to create an incentive mechanism for contr
 - Content submission API
 - AI integration for content generation
 - Community collaboration tools
+- Token economics for contribution incentives
+- Zero-knowledge features for private content access
 
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.
