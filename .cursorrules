@@ -16,6 +16,7 @@ Abstraction to abstraction, Ab2 is.
 3. Server-side rendering where beneficial
 4. Progressive enhancement
 5. Mobile-first responsive design
+6. Consistent pattern integration across sections
 
 ## Code Style Guidelines
 1. Use TypeScript for type safety
@@ -33,6 +34,23 @@ Abstraction to abstraction, Ab2 is.
 3. Co-locate component tests with components
 4. Use a consistent naming convention
 
+## CSS Organization
+1. Maintain all global styles in globals.css
+2. Group related styles with clear section comments
+3. Use CSS variables for consistent theming
+4. Minimize inline styles in components
+5. Organize styles from general to specific
+6. Use logical class naming that reflects component hierarchy
+7. Separate layout styles from visual styles
+
+## Documentation Style
+1. Use consistent background patterns across all documentation
+2. Implement floating navigation with transparent backgrounds
+3. Apply consistent styling for section headings
+4. Use gradient underlines for visual hierarchy
+5. Ensure documentation reflects the ABSTRACTU design language
+6. Create mobile-responsive navigation for all documentation
+
 ## State Management
 1. Use React Context for global state
 2. Use React Query for server state
@@ -45,6 +63,7 @@ Abstraction to abstraction, Ab2 is.
 3. Use Next.js Image component
 4. Minimize JavaScript bundle size
 5. Implement proper caching strategies
+6. Keep CSS selectors efficient
 
 ## Accessibility
 1. Follow WCAG 2.1 AA standards
@@ -52,6 +71,7 @@ Abstraction to abstraction, Ab2 is.
 3. Ensure keyboard navigation
 4. Provide appropriate ARIA attributes
 5. Test with screen readers
+6. Maintain sufficient color contrast
 
 ## Development Workflow
 1. Create feature branches
@@ -59,6 +79,7 @@ Abstraction to abstraction, Ab2 is.
 3. Review code before merging
 4. Document API changes
 5. Keep dependencies updated
+6. Regularly refactor CSS for maintainability
 
 ## Future Considerations
 1. User authentication system

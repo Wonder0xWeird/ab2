@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# smart contract development
+/contracts/node_modules
+/contracts/.env
+/contracts/cache
+/contracts/artifacts
+/contracts/typechain-types
+/contracts/deployments
+/contracts/coverage
+/contracts/coverage.json
