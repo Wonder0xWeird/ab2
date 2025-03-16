@@ -15,7 +15,7 @@ export default function DiamondStandardPage() {
       <p>
         The Diamond Standard (EIP-2535) allows for a contract (called a Diamond) to be composed
         of multiple separate contracts (called Facets). This enables modular functionality and
-        contract upgradeability without changing the Diamond's address or state.
+        contract upgradeability without changing the Diamond&apos;s address or state.
       </p>
 
       <h2>Key Concepts</h2>
@@ -36,14 +36,14 @@ export default function DiamondStandardPage() {
 
       <ul>
         <li>Each facet implements a set of related functions</li>
-        <li>Facets do not maintain their own storage (they use the Diamond's storage)</li>
+        <li>Facets do not maintain their own storage (they use the Diamond&apos;s storage)</li>
         <li>Facets can be added, replaced, or removed from the Diamond</li>
       </ul>
 
       <h3>Diamond Cuts</h3>
 
       <p>
-        A "diamond cut" is the process of adding, replacing, or removing facets from a Diamond:
+        A &quot;diamond cut&quot; is the process of adding, replacing, or removing facets from a Diamond:
       </p>
 
       <ul>
@@ -66,7 +66,7 @@ export default function DiamondStandardPage() {
       <h2>ABSTRACTU Implementation</h2>
 
       <p>
-        In the ABSTRACTU platform, we've implemented the Diamond Standard with the following components:
+        In the ABSTRACTU platform, we&apos;ve implemented the Diamond Standard with the following components:
       </p>
 
       <h3>Core Diamond Contract</h3>

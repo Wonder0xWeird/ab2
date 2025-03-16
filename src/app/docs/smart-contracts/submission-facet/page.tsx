@@ -330,7 +330,7 @@ export default function SubmissionFacetPage() {
     SubmissionStatus status
 );`}</code></pre>
 
-      <p>Emitted when a submission's status changes.</p>
+      <p>Emitted when a submission&apos;s status changes.</p>
 
       <h3>SubmissionEvaluated</h3>
 

@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function InstallationPage() {
   return (
     <div className="docs-page">
@@ -7,7 +9,7 @@ export default function InstallationPage() {
 
       <p>
         This guide will help you set up your local development environment for the ABSTRACTU platform,
-        whether you're working on the smart contracts, frontend, or both.
+        whether you&apos;re working on the smart contracts, frontend, or both.
       </p>
 
       <h2>Prerequisites</h2>
@@ -177,16 +179,16 @@ npm run build`}</code></pre>
 
       <ol>
         <li>
-          Explore the <a href="/docs/architecture">Architecture Overview</a> to understand the system design
+          Explore the <Link href="/docs/architecture">Architecture Overview</Link> to understand the system design
         </li>
         <li>
-          Read about the <a href="/docs/core-concepts/diamond-standard">Diamond Standard</a> implementation
+          Read about the <Link href="/docs/core-concepts/diamond-standard">Diamond Standard</Link> implementation
         </li>
         <li>
-          Learn about the <a href="/docs/core-concepts/submissions">Submission Process</a> for content creators
+          Learn about the <Link href="/docs/core-concepts/submissions">Submission Process</Link> for content creators
         </li>
         <li>
-          Check out the <a href="/docs/smart-contracts/overview">Smart Contracts Documentation</a> for details on the contract architecture
+          Check out the <Link href="/docs/smart-contracts/overview">Smart Contracts Documentation</Link> for details on the contract architecture
         </li>
       </ol>
     </div>

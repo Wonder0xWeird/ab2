@@ -68,17 +68,17 @@ export default function SubmissionsPage() {
 
       <h3>3. Approved</h3>
 
-      <p>If the submission meets the platform's criteria, it is Approved:</p>
+      <p>If the submission meets the platform&apos;s criteria, it is Approved:</p>
 
       <ul>
         <li>The submission becomes visible on the platform</li>
         <li>It may be eligible for tokenization or rewards</li>
-        <li>It contributes to the author's reputation</li>
+        <li>It contributes to the author&apos;s reputation</li>
       </ul>
 
       <h3>4. Rejected</h3>
 
-      <p>If the submission does not meet the platform's criteria, it is Rejected:</p>
+      <p>If the submission does not meet the platform&apos;s criteria, it is Rejected:</p>
 
       <ul>
         <li>The author receives feedback explaining the rejection</li>
@@ -163,7 +163,7 @@ export default function SubmissionsPage() {
 
       <ul>
         <li>
-          <strong>Author Tracking</strong>: Each submission is linked to its author's address
+          <strong>Author Tracking</strong>: Each submission is linked to its author&apos;s address
         </li>
         <li><strong>Author History</strong>: Authors can view their submission history</li>
         <li>

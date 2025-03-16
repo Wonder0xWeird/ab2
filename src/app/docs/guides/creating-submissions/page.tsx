@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function CreatingSubmissionsPage() {
   return (
     <div className="docs-page">
@@ -108,8 +110,8 @@ async function finalizeSubmission(submissionId) {
 
       <ol>
         <li><strong>Connect Wallet</strong>: Connect your Ethereum wallet to the platform</li>
-        <li><strong>Navigate to Submissions</strong>: Go to the "My Submissions" section</li>
-        <li><strong>Create New</strong>: Click the "Create New Submission" button</li>
+        <li><strong>Navigate to Submissions</strong>: Go to the &quot;My Submissions&quot; section</li>
+        <li><strong>Create New</strong>: Click the &quot;Create New Submission&quot; button</li>
         <li>
           <strong>Fill Details</strong>:
           <ul>
@@ -122,7 +124,7 @@ async function finalizeSubmission(submissionId) {
         <li><strong>Save as Draft</strong>: Your submission will be saved as a draft</li>
         <li><strong>Edit if Needed</strong>: You can make changes to your draft as needed</li>
         <li>
-          <strong>Finalize</strong>: When ready, click "Finalize Submission" to submit for
+          <strong>Finalize</strong>: When ready, click &quot;Finalize Submission&quot; to submit for
           evaluation
         </li>
       </ol>
@@ -181,7 +183,7 @@ async function finalizeSubmission(submissionId) {
           finalizing
         </li>
         <li>
-          <strong>Review Guidelines</strong>: Familiarize yourself with the platform's content
+          <strong>Review Guidelines</strong>: Familiarize yourself with the platform&apos;s content
           guidelines
         </li>
       </ol>
@@ -195,7 +197,7 @@ async function finalizeSubmission(submissionId) {
       <p>If your submission transaction fails:</p>
       <ul>
         <li>Check that you have enough ETH for gas fees</li>
-        <li>Ensure you're not blacklisted</li>
+        <li>Ensure you&apos;re not blacklisted</li>
         <li>Verify your wallet is properly connected</li>
       </ul>
 
@@ -204,7 +206,7 @@ async function finalizeSubmission(submissionId) {
       <p>If you can't update your submission:</p>
       <ul>
         <li>Verify the submission is still in Draft status</li>
-        <li>Ensure you're using the same wallet that created the submission</li>
+        <li>Ensure you&apos;re using the same wallet that created the submission</li>
         <li>Check that all required fields are filled</li>
       </ul>
 
@@ -223,13 +225,13 @@ async function finalizeSubmission(submissionId) {
 
       <ul>
         <li>
-          Learn about the <a href="/docs/guides/evaluating-content">evaluation process</a>
+          Learn about the <Link href="/docs/guides/evaluating-content">evaluation process</Link>
         </li>
         <li>
-          Explore how to <a href="/docs/api/javascript-sdk">view published content</a>
+          Explore how to <Link href="/docs/api/javascript-sdk">view published content</Link>
         </li>
         <li>
-          Consider applying for <a href="/docs/faq">content creator privileges</a>
+          Consider applying for <Link href="/docs/faq">content creator privileges</Link>
         </li>
       </ul>
     </div>

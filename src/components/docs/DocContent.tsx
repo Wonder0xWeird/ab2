@@ -14,7 +14,6 @@ export default function DocContent({ content }: DocContentProps) {
         remarkPlugins={[remarkGfm]}
         components={{
           code({ className, children }) {
-            const match = /language-(\w+)/.exec(className || '');
             return (
               <pre className={className}>
                 <code>
