@@ -3,9 +3,9 @@ import { getDocBySlug } from '@/lib/docs';
 import DocContent from '@/components/docs/DocContent';
 import { notFound } from 'next/navigation';
 
-type Params = {
+type Params = Promise<{
   slug: string[];
-};
+}>;
 
 export async function generateMetadata({
   params
