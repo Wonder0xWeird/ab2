@@ -3,15 +3,8 @@ import { getDocBySlug } from '@/lib/docs';
 import DocContent from '@/components/docs/DocContent';
 import { notFound } from 'next/navigation';
 
-// Updated interface to be compatible with Next.js pages
-interface PageProps {
-  params: {
-    slug: string[];
-  };
-  searchParams?: Record<string, string | string[] | undefined>;
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// Let Next.js infer the type for generateMetadata
+export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
   const slug = params.slug.join('/');
   const doc = await getDocBySlug(slug);
 
@@ -28,7 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function DocPage({ params }: PageProps) {
+// Let Next.js infer the type for the page component
+export default async function DocPage({ params }: { params: { slug: string[] } }) {
   const slug = params.slug.join('/');
   const doc = await getDocBySlug(slug);
 
