@@ -3,9 +3,18 @@ import { getDocBySlug } from '@/lib/docs';
 import DocContent from '@/components/docs/DocContent';
 import { notFound } from 'next/navigation';
 
-// Let Next.js infer the type for generateMetadata
-export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
-  const slug = params.slug.join('/');
+type Params = {
+  slug: string[];
+};
+
+export async function generateMetadata({
+  params
+}: {
+  params: Params
+}): Promise<Metadata> {
+  // Await the params object before accessing its properties
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug.join('/');
   const doc = await getDocBySlug(slug);
 
   if (!doc) {
@@ -21,9 +30,14 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
   };
 }
 
-// Let Next.js infer the type for the page component
-export default async function DocPage({ params }: { params: { slug: string[] } }) {
-  const slug = params.slug.join('/');
+export default async function DocPage({
+  params
+}: {
+  params: Params
+}) {
+  // Await the params object before accessing its properties
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug.join('/');
   const doc = await getDocBySlug(slug);
 
   if (!doc) {
