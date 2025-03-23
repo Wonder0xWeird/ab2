@@ -1,7 +1,7 @@
 # ABSTRACTU
 
 ## Overview
-ABSTRACTU (Ab2) is an experimental web platform for exploring philosophical content. The project features both an engaging homepage with interactive animations and a MUSE interface with a unique draggable viewport that allows users to navigate through content in a non-linear, explorative way.
+ABSTRACTU (Ab2) is an experimental web platform for exploring philosophical content through a recursive abstraction model. The project features both an engaging homepage with interactive animations and a MUSE interface with a unique draggable viewport that allows users to navigate through content in a non-linear, explorative way. ABSTRACTU embodies the concept of a meta-abstractor - a system that not only abstracts reality but can abstract its own process of abstraction.
 
 ## Live Demo
 Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
@@ -9,13 +9,27 @@ Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 ## Key Features
 - Interactive homepage with dynamic "A" logo animation
 - Spatial canvas interface with draggable viewport
-- Philosophical content exploration
+- Philosophical content exploration with sequential and parallel discovery paths
 - Minimalist design focused on typography
 - Responsive layout for various device sizes
 - Smooth animations and transitions
 - Cohesive documentation interface with background pattern integration
 - Diamond Standard smart contracts for upgradeable blockchain integration
-- Content submission and evaluation system (in development)
+- Contribution and evaluation system based on ergodic principles
+
+## Philosophical Foundations
+ABSTRACTU is guided by several key philosophical concepts:
+
+### The Upward Spiral of Abstraction
+The platform embodies the principle that "those things which are more effective and efficient at abstracting themselves will abstract themselves into things which tend to be more effective and efficient at abstracting themselves, yielding an upward spiral of abstraction." This recursive self-improvement leads toward a meta-abstractor that drives reality toward ever more optimal abstractions.
+
+### Ergodicity in Knowledge Creation
+ABSTRACTU implements the concept of ergodicity - where the time average of a system's behavior equals the space average of its possible states. This manifests in two complementary knowledge creation approaches:
+
+1. **Sequential Refinement (Vertical Exploration)**: Building upon and refining previous work
+2. **Parallel Exploration (Horizontal Exploration)**: Diverse approaches to similar problems
+
+The architecture supports both paths, hypothesizing that they will ultimately converge on similar optimal abstractions, mirroring evolutionary processes.
 
 ## Technical Stack
 - Next.js (App Router)
@@ -24,6 +38,8 @@ Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 - Solidity smart contracts
 - Hardhat development environment
 - Abstract Blockchain (EVM-compatible)
+- MongoDB for draft storage
+- Filecoin for permanent storage
 - Vercel Deployment
 
 ## Local Development
@@ -77,14 +93,27 @@ The project implements a blockchain component using the Diamond Standard (EIP-25
   - DiamondCut: Manages contract upgrades
   - DiamondLoupe: Provides contract introspection
   - Ownership: Handles access control
-  - Submission: Manages content contributions
+  - Contribution: Manages content contributions and ACRONTU evaluation
+- **Extensible Design**:
+  - Version tracking at both facet and contribution levels
+  - Status constants instead of enums for future expandability
+  - Configurable thresholds and evaluation criteria
+  - Helper functions for cross-facet interactions
 - **Development Environment**:
   - Hardhat for local development and testing
   - TypeScript for type-safe contract interaction
   - Comprehensive test suite for all facets
   - Deployment scripts for testnet and mainnet
 
-The smart contract implementation aims to create an incentive mechanism for contributing valuable knowledge while making it accessible through a decentralized approach.
+## Contribution System Architecture
+ABSTRACTU implements a hybrid architecture for content contributions:
+
+1. **Draft Storage**: MongoDB database stores draft contributions during development
+2. **Evaluation**: ACRONTU system evaluates submissions using AI-based criteria
+3. **Permanent Storage**: Accepted contributions stored on Filecoin network
+4. **Blockchain Record**: Abstract blockchain records metadata, status, and Filecoin CIDs
+
+This system creates an efficient pipeline where only quality content receives permanent storage while maintaining a record of all contributions and their status.
 
 ## Cryptographic Implementation
 We're expanding ABSTRACTU with a blockchain component using the Diamond Standard (EIP-2535):

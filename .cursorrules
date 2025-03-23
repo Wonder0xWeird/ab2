@@ -130,3 +130,46 @@ Abstraction to abstraction, Ab2 is.
 7. Tokenomic incentive mechanisms
 8. DAO governance for protocol decisions
 9. Zero-knowledge proofs for privacy features
+
+## Philosophical Principles
+- Always consider ABSTRACTU as the meta-abstractor rather than just a platform
+- Recognize the recursive nature of abstraction processes
+- Maintain the balance between ideal abstractions and pragmatic implementations
+- Support both sequential refinement (vertical) and parallel exploration (horizontal)
+- Aim for convergence through diverse paths of exploration
+- Apply ergodicity principles to knowledge creation approaches
+
+## Technical Standards
+- Follow Diamond Standard (EIP-2535) for contract development
+- Use status constants instead of enums for future extensibility
+- Include version tracking in all data structures
+- Implement proper storage namespacing to prevent collisions
+- Make parameters configurable rather than hardcoding values
+- Use explicit initialization functions for facets
+- Store drafts in MongoDB, approved content on Filecoin, and metadata on Abstract blockchain
+
+## Code Style
+- Use TypeScript for type safety
+- Follow Solidity style guide for smart contracts
+- Implement modular facet architecture
+- Document with comprehensive NatSpec comments
+- Maintain consistent naming conventions
+- Test extensively before deployment
+- Ensure backward compatibility in upgrades
+
+## User Experience
+- Maintain minimalist design focused on content
+- Provide intuitive navigation through both sequential and spatial interfaces
+- Support exploration of idea lineage and relationships
+- Allow users to visualize convergence of similar ideas
+- Make blockchain interactions as seamless as possible
+- Enable clear tracking of contribution status and evaluation
+
+## Contribution Flow
+- Draft contributions stored off-chain in MongoDB
+- Only approved contributions stored permanently on Filecoin
+- All contribution metadata and statuses recorded on blockchain
+- ACRONTU provides evaluation and verification
+- Support linking between related contributions
+- Track both vertical and horizontal exploration patterns
+- Implement reputation systems for contributors
