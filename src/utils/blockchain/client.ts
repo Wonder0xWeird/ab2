@@ -173,7 +173,7 @@ export class BlockchainClient {
               topics: log.topics,
               data: log.data
             });
-          } catch (parseError) {
+          } catch (_) {
             return null;
           }
         })
@@ -322,7 +322,7 @@ export class BlockchainClient {
     try {
       await this.getContribution(contributionId);
       return true;
-    } catch (error) {
+    } catch (_) {
       return false;
     }
   }

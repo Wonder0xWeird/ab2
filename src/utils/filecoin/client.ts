@@ -2,7 +2,6 @@
  * Filecoin client class for ABSTRACTU
  * Handles content storage using Filecoin/IPFS
  */
-import axios from 'axios';
 
 /**
  * FilecoinContent interface for storing content
@@ -25,7 +24,7 @@ export interface FilecoinUploadResponse {
 
 export interface FilecoinRetrieveResponse {
   content: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -76,7 +75,7 @@ export class FilecoinClient {
    * @param content Object containing the content and metadata to store
    * @returns Promise resolving to the CID of the stored content
    */
-  public async storeContent(content: FilecoinContent): Promise<string> {
+  public async storeContent(_content: FilecoinContent): Promise<string> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
     }
@@ -85,9 +84,9 @@ export class FilecoinClient {
       // Implementation of storeContent method
       // This is a placeholder and should be replaced with the actual implementation
       throw new Error('storeContent method not implemented');
-    } catch (error) {
-      console.error('Filecoin storage error:', error);
-      throw new Error(`Failed to store content on Filecoin: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } catch (err) {
+      console.error('Filecoin storage error:', err);
+      throw new Error(`Failed to store content on Filecoin: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   }
 
@@ -96,7 +95,7 @@ export class FilecoinClient {
    * @param cid The CID of the content to retrieve
    * @returns Promise resolving to the content and metadata
    */
-  public async retrieveContent(cid: string): Promise<FilecoinRetrieveResponse> {
+  public async retrieveContent(_cid: string): Promise<FilecoinRetrieveResponse> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
     }
@@ -105,9 +104,9 @@ export class FilecoinClient {
       // Implementation of retrieveContent method
       // This is a placeholder and should be replaced with the actual implementation
       throw new Error('retrieveContent method not implemented');
-    } catch (error) {
-      console.error('Filecoin retrieval error:', error);
-      throw new Error(`Failed to retrieve content from Filecoin: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } catch (err) {
+      console.error('Filecoin retrieval error:', err);
+      throw new Error(`Failed to retrieve content from Filecoin: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   }
 
@@ -116,7 +115,7 @@ export class FilecoinClient {
    * @param cid The CID to check
    * @returns Promise resolving to boolean indicating if the content exists
    */
-  public async contentExists(cid: string): Promise<boolean> {
+  public async contentExists(_cid: string): Promise<boolean> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
     }
@@ -125,7 +124,7 @@ export class FilecoinClient {
       // Implementation of contentExists method
       // This is a placeholder and should be replaced with the actual implementation
       throw new Error('contentExists method not implemented');
-    } catch (error) {
+    } catch (_) {
       return false;
     }
   }
@@ -135,7 +134,7 @@ export class FilecoinClient {
    * @param cid The CID to check
    * @returns Promise resolving to the status of the content
    */
-  public async getContentStatus(cid: string): Promise<{ deals: any[] }> {
+  public async getContentStatus(_cid: string): Promise<{ deals: Record<string, unknown>[] }> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
     }
@@ -144,9 +143,9 @@ export class FilecoinClient {
       // Implementation of getContentStatus method
       // This is a placeholder and should be replaced with the actual implementation
       throw new Error('getContentStatus method not implemented');
-    } catch (error) {
-      console.error('Filecoin status error:', error);
-      throw new Error(`Failed to get content status from Filecoin: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } catch (err) {
+      console.error('Filecoin status error:', err);
+      throw new Error(`Failed to get content status from Filecoin: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   }
 } 
