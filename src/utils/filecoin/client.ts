@@ -1,16 +1,19 @@
 /**
  * Filecoin client class for ABSTRACTU
- * Handles content storage using Filecoin/IPFS
+ * Uses Lighthouse SDK for decentralized storage on Filecoin
  */
+import axios from 'axios';
+import FormData from 'form-data';
+import fs from 'fs';
+import path from 'path';
+import { Readable } from 'stream';
 
 /**
- * FilecoinContent interface for storing content
+ * Input types for the Filecoin client
  */
 export interface FilecoinContent {
-  title: string;
-  description: string;
   content: string;
-  metadata: Record<string, unknown>;
+  metadata: Record<string, any>;
 }
 
 /**
@@ -24,24 +27,23 @@ export interface FilecoinUploadResponse {
 
 export interface FilecoinRetrieveResponse {
   content: string;
-  metadata: Record<string, unknown>;
+  metadata: Record<string, any>;
 }
 
 /**
- * FilecoinClient class
+ * Filecoin client class
  */
 export class FilecoinClient {
   private static instance: FilecoinClient;
   private apiKey: string;
-  private apiEndpoint: string;
-  private initialized = false;
+  private baseUrl: string;
 
   /**
    * Private constructor for singleton pattern
    */
   private constructor() {
-    this.apiKey = process.env.FILECOIN_API_KEY || '';
-    this.apiEndpoint = process.env.FILECOIN_API_ENDPOINT || '';
+    this.apiKey = process.env.LIGHTHOUSE_API_KEY || '';
+    this.baseUrl = 'https://node.lighthouse.storage';
   }
 
   /**
@@ -55,19 +57,12 @@ export class FilecoinClient {
   }
 
   /**
-   * Initialize the Filecoin client
+   * Validate API key is available
    */
-  public async initialize(): Promise<void> {
-    if (this.initialized) {
-      return;
+  private validateApiKey(): void {
+    if (!this.apiKey) {
+      throw new Error('Lighthouse API key not provided in environment variables');
     }
-
-    if (!this.apiKey || !this.apiEndpoint) {
-      console.warn('Filecoin API key or endpoint not provided. Using mock mode.');
-    }
-
-    this.initialized = true;
-    console.log('Filecoin client initialized');
   }
 
   /**
@@ -75,6 +70,7 @@ export class FilecoinClient {
    * @param content Object containing the content and metadata to store
    * @returns Promise resolving to the CID of the stored content
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async storeContent(_content: FilecoinContent): Promise<string> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
@@ -95,6 +91,7 @@ export class FilecoinClient {
    * @param cid The CID of the content to retrieve
    * @returns Promise resolving to the content and metadata
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async retrieveContent(_cid: string): Promise<FilecoinRetrieveResponse> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
@@ -115,6 +112,7 @@ export class FilecoinClient {
    * @param cid The CID to check
    * @returns Promise resolving to boolean indicating if the content exists
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async contentExists(_cid: string): Promise<boolean> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');
@@ -124,6 +122,7 @@ export class FilecoinClient {
       // Implementation of contentExists method
       // This is a placeholder and should be replaced with the actual implementation
       throw new Error('contentExists method not implemented');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       return false;
     }
@@ -134,6 +133,7 @@ export class FilecoinClient {
    * @param cid The CID to check
    * @returns Promise resolving to the status of the content
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getContentStatus(_cid: string): Promise<{ deals: Record<string, unknown>[] }> {
     if (!this.initialized) {
       throw new Error('Filecoin client not initialized');

@@ -85,9 +85,9 @@ function SignInContent() {
 
       // Redirect to dashboard after successful sign-in
       router.push("/dashboard");
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error signing in with Ethereum:", error);
-      setError(error instanceof Error ? error.message : "Failed to sign in");
+      setError(error.message || "Failed to sign in");
 
       // Disconnect on error
       disconnect();

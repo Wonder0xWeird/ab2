@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 
 // Interface for the ABI to allow for testing without needing the actual artifact
 interface ContractABI {
-  abi: Array<string | object>;
+  abi: any[];
 }
 
 // Define a mock ABI for development when actual ABI isn't available
@@ -22,11 +22,18 @@ const MOCK_CONTRIBUTION_FACET_ABI: ContractABI = {
   ]
 };
 
-// Get ABI from mock - will be replaced with proper imports when contracts are available
+// Get ABI from either real artifact or mock
 function getContractABI(): ContractABI {
-  // Use mock ABI for now
-  console.warn('Using mock ContributionFacet ABI. For production, provide the real artifact.');
-  return MOCK_CONTRIBUTION_FACET_ABI;
+  try {
+    // Try to import the real ABI
+    // This is a dynamic import that will be replaced with a proper import when available
+    const ContributionFacetABI = require('../../../contracts/artifacts/contracts/src/facets/ContributionFacet.sol/ContributionFacet.json') as ContractABI;
+    return ContributionFacetABI;
+  } catch (error) {
+    // If import fails, use mock ABI
+    console.warn('Using mock ContributionFacet ABI. For production, provide the real artifact.');
+    return MOCK_CONTRIBUTION_FACET_ABI;
+  }
 }
 
 /**
@@ -53,7 +60,7 @@ interface ContractLog {
 // Interface for event args
 interface EventWithArgs {
   name: string;
-  args: Record<string, unknown>;
+  args: Record<string, any>;
 }
 
 /**
@@ -123,9 +130,9 @@ export class BlockchainClient {
 
       this.initialized = true;
       console.log('Blockchain client initialized');
-    } catch (err) {
-      console.error('Blockchain client initialization error:', err);
-      throw err;
+    } catch (error) {
+      console.error('Blockchain client initialization error:', error);
+      throw error;
     }
   }
 
@@ -154,7 +161,7 @@ export class BlockchainClient {
 
     try {
       // Connect as contributor if different from admin
-      const connectedContract = this.contract;
+      let connectedContract = this.contract;
       if (contributorAddress.toLowerCase() !== this.adminWallet?.address.toLowerCase()) {
         // Note: In production, this would use the contributor's signed transaction
         // For now, we use the admin wallet but could implement EIP-712 for proper authorization
@@ -173,6 +180,7 @@ export class BlockchainClient {
               topics: log.topics,
               data: log.data
             });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (_) {
             return null;
           }
@@ -184,9 +192,9 @@ export class BlockchainClient {
       }
 
       return Number(event.args.contributionId);
-    } catch (err) {
-      console.error('Register contribution intent error:', err);
-      throw new Error(`Failed to register contribution intent: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    } catch (error) {
+      console.error('Register contribution intent error:', error);
+      throw new Error(`Failed to register contribution intent: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -322,6 +330,7 @@ export class BlockchainClient {
     try {
       await this.getContribution(contributionId);
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       return false;
     }
