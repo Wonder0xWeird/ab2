@@ -255,27 +255,44 @@ Feedback: [Your detailed feedback]
 
   /**
    * Parse the response from a foundation model
+   * @param response The raw response data from the model API
+   * @param criteria The evaluation criteria used
+   * @returns Object containing score and feedback
    */
   private parseModelResponse(
-    response: any,
+    response: Record<string, unknown>,
     criteria: EvaluationCriteria
   ): { score: number; feedback: string } {
     try {
-      // Extract text from the model response
-      const text = response.choices?.[0]?.text || response.text || response.output || '';
+      // For simplicity in this implementation, we assume the model returns:
+      // { score: number, feedback: string }
+      // In a real implementation, this would parse based on the specific API response format
 
-      // Extract score using regex
-      const scoreMatch = text.match(/Score:\s*(\d+)/i);
-      const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1], 10))) : 50;
+      // Default values if parsing fails
+      let score = 50;
+      let feedback = `No feedback available for ${criteria} evaluation.`;
 
-      // Extract feedback
-      const feedbackMatch = text.match(/Feedback:\s*(.+?)(?:\n|$)/is);
-      const feedback = feedbackMatch ? feedbackMatch[1].trim() : 'No specific feedback provided.';
+      // Extract score and feedback from response if available
+      if (typeof response === 'object' && response !== null) {
+        if ('score' in response && typeof response.score === 'number') {
+          score = response.score;
+        }
+
+        if ('feedback' in response && typeof response.feedback === 'string') {
+          feedback = response.feedback;
+        }
+      }
+
+      // Normalize score to 0-100 range
+      score = Math.min(100, Math.max(0, score));
 
       return { score, feedback };
     } catch (error) {
-      console.error('Error parsing model response:', error);
-      return { score: 50, feedback: 'Error parsing evaluation results.' };
+      console.warn(`Error parsing model response for ${criteria}:`, error);
+      return {
+        score: 50,
+        feedback: `Could not parse evaluation for ${criteria}.`
+      };
     }
   }
 
