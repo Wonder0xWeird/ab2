@@ -2,18 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MongoDBClient, getContributionDraftModel } from '@/utils/mongodb';
 import { authMiddleware } from '@/utils/auth/middleware';
 
-type RouteParams = { params: { id: string } };
-
 /**
- * GET /api/contributions/[id]
+ * GET handler for /api/contributions/[id]
  * Get a specific contribution
  */
 export async function GET(
   request: NextRequest,
-  context: RouteParams
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
-
   // Get user from auth
   const user = await authMiddleware(request);
   if (!user) {
@@ -27,7 +23,7 @@ export async function GET(
 
     // Get contribution
     const ContributionDraft = getContributionDraftModel();
-    const contribution = await ContributionDraft.findById(id);
+    const contribution = await ContributionDraft.findById(params.id);
 
     if (!contribution) {
       return NextResponse.json({ error: 'Contribution not found' }, { status: 404 });
@@ -49,15 +45,13 @@ export async function GET(
 }
 
 /**
- * PUT /api/contributions/[id]
+ * PUT handler for /api/contributions/[id]
  * Update a draft contribution
  */
 export async function PUT(
   request: NextRequest,
-  context: RouteParams
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
-
   // Get user from auth
   const user = await authMiddleware(request);
   if (!user) {
@@ -73,7 +67,7 @@ export async function PUT(
 
     // Get contribution
     const ContributionDraft = getContributionDraftModel();
-    const contribution = await ContributionDraft.findById(id);
+    const contribution = await ContributionDraft.findById(params.id);
 
     if (!contribution) {
       return NextResponse.json({ error: 'Contribution not found' }, { status: 404 });
@@ -94,7 +88,7 @@ export async function PUT(
 
     // Update the contribution
     const updatedContribution = await ContributionDraft.findByIdAndUpdate(
-      id,
+      params.id,
       {
         title: title || contribution.title,
         description: description || contribution.description,
