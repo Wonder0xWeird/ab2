@@ -1,0 +1,96 @@
+// Cursor Rules for the ABSTRACTU Project
+
+/**
+ * Code Style Guidelines
+ */
+
+// 1. Use classes where feasible to manage functionality in a cohesive manner 
+// instead of standalone functions. This improves organization, maintainability,
+// and makes the codebase more extensible.
+
+// 2. Create proper implementations of connectors to external services (like Filecoin,
+// blockchain networks, etc.). Only leave pieces that can't be accessed from the IDE
+// as dummy/placeholder values.
+
+// 3. Environment variables should be used for all configuration values instead of
+// hardcoding values in the application code. This includes API endpoints, keys,
+// and other environment-specific configuration.
+
+// 4. Avoid generating or hardcoding random or placeholder values in the application code.
+// Write code to be functionally operational and use unit tests for testing with dummy values.
+
+// 5. Follow singleton pattern for service classes, especially those that manage
+// connections to external systems or state.
+
+// 6. Use proper TypeScript typing throughout the codebase to ensure compile-time
+// type safety and better IDE support.
+
+// 7. Implement proper error handling with detailed error messages and logging.
+
+// 8. Use asynchronous patterns consistently with async/await instead of raw promises.
+
+// 9. Organize code into logical modules and use index files for clean exports.
+
+// 10. Follow the established architectural pattern: MongoDB for drafts, Filecoin for
+// permanent storage, and blockchain for verification and status tracking.
+
+/**
+ * Next.js Client Component Guidelines
+ */
+
+// 1. Create a two-layer component architecture for client-side functionality:
+//    - Outer component for handling mounting state and hydration
+//    - Inner component for actual business logic and UI
+
+// 2. Always use mounted state checks before rendering components that use browser APIs
+// or third-party libraries to prevent hydration mismatches.
+
+// 3. Add fallback UI for server-side rendering to maintain layout consistency
+// during hydration.
+
+// 4. Keep "use client" directives at the top of component files that use client-side
+// features, including hooks and browser APIs.
+
+// 5. Defer all browser API calls until after component mounting is confirmed.
+
+/**
+ * MongoDB Integration Guidelines
+ */
+
+// 1. Use the singleton pattern for MongoDB client to enable connection reuse.
+
+// 2. Create proper model interfaces and schema definitions for all MongoDB models.
+
+// 3. Use barrel files (index.ts) in model directories to simplify imports.
+
+// 4. Implement proper error handling for database operations with detailed error messages.
+
+// 5. Provide development fallbacks for MongoDB connection in non-production environments.
+
+// 6. Add debug logging for database operations in development environments.
+
+// 7. Store sensitive information like nonces with appropriate TTL (Time To Live) indexes.
+
+/**
+ * Authentication Best Practices
+ */
+
+// 1. Use Sign-In with Ethereum (SIWE) for secure wallet-based authentication.
+
+// 2. Store one-time nonces in MongoDB to prevent replay attacks.
+
+// 3. Include timestamps in authentication messages and validate their freshness.
+
+// 4. Simplify SIWE message format to comply with parser limitations (avoid excessive newlines).
+
+// 5. Use NextAuth.js for session management and persistence.
+
+// 6. Implement proper JWT token generation and validation for API authentication.
+
+// 7. Delete used nonces immediately after verification to prevent reuse.
+
+// 8. Add appropriate error handling and user feedback during authentication flow.
+
+// 9. Create protected routes that verify authentication before allowing access.
+
+// 10. Follow the "defense in depth" principle by implementing multiple security layers. 

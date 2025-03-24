@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import AuthStatus from "@/components/AuthStatus";
 
 export default function HomePage() {
   const router = useRouter();
@@ -28,21 +29,45 @@ export default function HomePage() {
   };
 
   return (
-    <div className="full-screen-a">
-      <div
-        className={`large-a ${isHovering ? 'hovered' : ''}`}
-        onClick={handleAClick}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-      >
-        A
+    <div className="container">
+      <div className="full-screen-a">
+        <div
+          className={`large-a ${isHovering ? 'hovered' : ''}`}
+          onClick={handleAClick}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          A
+        </div>
+
+        {showSubtitle && (
+          <div className="home-subtitle">
+            <span>Abstraction to abstraction, Ab2 is.</span>
+          </div>
+        )}
       </div>
 
-      {showSubtitle && (
-        <div className="home-subtitle">
-          <span>Abstraction to abstraction, Ab2 is.</span>
-        </div>
-      )}
+      <div className="auth-container">
+        <AuthStatus className="auth-status" />
+      </div>
+
+      <style jsx>{`
+        .container {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem;
+        }
+        
+        .auth-container {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          z-index: 100;
+        }
+      `}</style>
     </div>
   );
 }

@@ -134,6 +134,73 @@ The cryptographic implementation aims to create an incentive mechanism for contr
 - Token economics for contribution incentives
 - Zero-knowledge features for private content access
 
+## Authentication System
+
+The ABSTRACTU platform uses Ethereum-based authentication (Sign-In with Ethereum) to provide a seamless and secure authentication experience for users.
+
+### Features
+
+- **Wallet-Based Authentication**: Users can sign in using their Ethereum wallets
+- **Message Signing**: Authentication is done by signing a message with the user's wallet, without sharing private keys
+- **JSON Web Tokens**: After successful authentication, a JWT is issued for subsequent API calls
+- **Protected API Routes**: Secure routes for creating and managing contributions
+- **Persistent Sessions**: Authentication state is preserved across page refreshes
+- **Replay Attack Prevention**: Uses MongoDB to store one-time nonces and timestamps
+- **Hydration-Safe Components**: Specially designed to work with both server and client rendering
+
+### Tech Stack
+
+- **NextAuth.js**: Handles authentication session management
+- **RainbowKit**: Provides wallet connection UI and wallet management
+- **SIWE (Sign In With Ethereum)**: Ethereum-based authentication protocol
+- **Wagmi**: React hooks for Ethereum wallet interactions
+- **JWT**: Custom token generation for API authentication
+- **MongoDB**: Stores authentication nonces and prevents replay attacks
+
+### Authentication Flow
+
+1. User connects their wallet using RainbowKit
+2. Server generates a unique nonce and stores it in MongoDB
+3. User signs a message containing the nonce and timestamp using SIWE protocol
+4. Server verifies the signature and validates the nonce against MongoDB
+5. Upon successful verification, the nonce is deleted to prevent reuse
+6. A JWT token is generated with the user's address and added to the session
+7. The authenticated session is used for secure API access
+
+### Client-Side Architecture
+
+To ensure compatibility with Next.js's server components and prevent hydration errors, the authentication components follow a two-layer architecture:
+
+- **Outer Component**: Handles mounting state and defers rendering until client-side hydration
+- **Inner Component**: Contains all wallet-specific functionality and is only rendered client-side
+
+This pattern ensures that wallet operations only occur in a fully client-side context, preventing hydration mismatches.
+
+### Environment Variables
+
+To set up authentication, add these variables to your `.env.local` file:
+
+```
+# NextAuth.js Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret-for-jwt
+
+# WalletConnect Configuration
+NEXT_PUBLIC_WALLETCONNECT_ID=your-walletconnect-project-id
+
+# JWT for Auth Token
+JWT_SECRET=your-jwt-secret-for-custom-tokens
+
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/abstractu
+MONGODB_DB=abstractu
+```
+
+### Pages
+
+- `/auth/signin` - Sign-in page with wallet connection
+- `/dashboard` - User dashboard showing wallet info and navigation
+
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.
 
