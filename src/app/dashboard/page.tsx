@@ -43,7 +43,7 @@ export default function Dashboard() {
             <p className="auth-note">You are authenticated using Sign-In with Ethereum (SIWE)</p>
             <p className="auth-details">Your authentication includes enhanced security:</p>
             <ul className="security-features">
-              <li>Time-sensitive signature with "ABSTRACTU WELCOMES" statement</li>
+              <li>Time-sensitive signature with &quot;ABSTRACTU WELCOMES&quot; statement</li>
               <li>One-time use nonce for replay attack protection</li>
               <li>5-minute timestamp validation window</li>
               <li>MongoDB-backed verification system</li>

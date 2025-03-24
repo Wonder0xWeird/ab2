@@ -7,7 +7,6 @@ import { IContributionDraft } from '../mongodb/models/ContributionDraft';
 import { FilecoinClient, FilecoinContent } from '../filecoin';
 import { BlockchainClient } from '../blockchain';
 import { AIEvaluator, AggregatedEvaluation } from '../ai';
-import { IEvaluationResultCache } from '../mongodb/models/EvaluationResultCache';
 
 /**
  * Contribution evaluation status types

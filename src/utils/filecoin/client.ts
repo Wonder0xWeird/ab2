@@ -1,19 +1,16 @@
 /**
  * Filecoin client class for ABSTRACTU
- * Uses Lighthouse SDK for decentralized storage on Filecoin
+ * Handles content storage using Filecoin/IPFS
  */
-import axios from 'axios';
-import FormData from 'form-data';
-import fs from 'fs';
-import path from 'path';
-import { Readable } from 'stream';
 
 /**
- * Input types for the Filecoin client
+ * FilecoinContent interface for storing content
  */
 export interface FilecoinContent {
+  title: string;
+  description: string;
   content: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -27,23 +24,24 @@ export interface FilecoinUploadResponse {
 
 export interface FilecoinRetrieveResponse {
   content: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**
- * Filecoin client class
+ * FilecoinClient class
  */
 export class FilecoinClient {
   private static instance: FilecoinClient;
   private apiKey: string;
-  private baseUrl: string;
+  private apiEndpoint: string;
+  private initialized = false;
 
   /**
    * Private constructor for singleton pattern
    */
   private constructor() {
-    this.apiKey = process.env.LIGHTHOUSE_API_KEY || '';
-    this.baseUrl = 'https://node.lighthouse.storage';
+    this.apiKey = process.env.FILECOIN_API_KEY || '';
+    this.apiEndpoint = process.env.FILECOIN_API_ENDPOINT || '';
   }
 
   /**
@@ -57,12 +55,19 @@ export class FilecoinClient {
   }
 
   /**
-   * Validate API key is available
+   * Initialize the Filecoin client
    */
-  private validateApiKey(): void {
-    if (!this.apiKey) {
-      throw new Error('Lighthouse API key not provided in environment variables');
+  public async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
     }
+
+    if (!this.apiKey || !this.apiEndpoint) {
+      console.warn('Filecoin API key or endpoint not provided. Using mock mode.');
+    }
+
+    this.initialized = true;
+    console.log('Filecoin client initialized');
   }
 
   /**
