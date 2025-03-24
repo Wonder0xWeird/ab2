@@ -8,7 +8,7 @@ import { generateAuthToken } from "@/utils/auth/middleware";
 /**
  * NextAuth configuration for Sign-In with Ethereum
  */
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       id: "ethereum",
