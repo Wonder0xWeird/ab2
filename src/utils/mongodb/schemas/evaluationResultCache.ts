@@ -1,5 +1,5 @@
 /**
- * EvaluationResultCache model for ABSTRACTU
+ * EvaluationResultCache schema for ABSTRACTU
  * Stores cached evaluation results from foundation models
  */
 import mongoose, { Document, Schema } from 'mongoose';
@@ -20,7 +20,7 @@ export interface IEvaluationResultCache extends Document {
 /**
  * Schema for EvaluationResultCache 
  */
-const EvaluationResultCacheSchema = new Schema<IEvaluationResultCache>({
+export const evaluationResultCacheSchema = new Schema<IEvaluationResultCache>({
   contributionId: {
     type: String,
     required: true,
@@ -56,11 +56,4 @@ const EvaluationResultCacheSchema = new Schema<IEvaluationResultCache>({
 });
 
 // Compound index for faster lookups
-EvaluationResultCacheSchema.index({ contributionId: 1, modelId: 1, criteria: 1 });
-
-// Export the model (with safe model creation)
-export const getEvaluationResultCacheModel = () => {
-  const modelName = 'EvaluationResultCache';
-  return mongoose.models[modelName] ||
-    mongoose.model<IEvaluationResultCache>(modelName, EvaluationResultCacheSchema);
-}; 
+evaluationResultCacheSchema.index({ contributionId: 1, modelId: 1, criteria: 1 }); 

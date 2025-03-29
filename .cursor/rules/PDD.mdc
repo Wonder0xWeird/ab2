@@ -208,6 +208,47 @@ Example implementation for page titles across the site:
 }
 ```
 
+### Authentication System Architecture
+
+The authentication system uses a secure, wallet-based approach leveraging the Sign-In with Ethereum (SIWE) standard:
+
+1. **Client Components**:
+   - Two-layer component architecture to prevent hydration issues
+   - RainbowKit for wallet connection UI
+   - Wagmi hooks for Ethereum interactions
+   - Client-side mounting checks to ensure proper rendering sequence
+
+2. **Authentication Flow**:
+   - User connects wallet through RainbowKit interface
+   - Backend generates a unique nonce stored in MongoDB with TTL index
+   - User signs a timestamped message containing the nonce
+   - Server verifies signature and validates nonce freshness
+   - Upon successful verification, nonce is deleted to prevent replay attacks
+   - JWT token is generated and stored in session
+
+3. **Security Features**:
+   - One-time nonces prevent replay attacks
+   - Timestamp validation ensures message freshness (5-minute window)
+   - MongoDB TTL indexes automatically expire unused nonces
+   - JWT tokens with configurable expiration
+   - Secure cookie storage for session persistence
+
+4. **MongoDB Models**:
+   - `AuthNonce`: Stores authentication nonces with automatic expiration
+   - Future models: `ContributionDraft`, `EvaluationResultCache`
+
+5. **Environment Configuration**:
+   - Centralized environment variables for all authentication settings
+   - Development fallbacks for local testing
+   - Separated concerns for NextAuth, MongoDB, and WalletConnect
+
+6. **Client-Side Error Handling**:
+   - Detailed error messages for authentication failures
+   - Visual feedback during authentication process
+   - Graceful recovery from connection issues
+
+This architecture provides secure, non-custodial authentication while maintaining a smooth user experience and developer-friendly implementation.
+
 ### Contribution Flow Architecture
 The contribution system implements a hybrid architecture:
 

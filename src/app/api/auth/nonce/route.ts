@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { MongoDBClient, getNonceModel } from '@/utils/mongodb';
+import { MongoDBClient, Nonce } from '@/utils/mongodb';
 
 export async function GET() {
   try {
@@ -12,11 +12,8 @@ export async function GET() {
     const nonce = uuidv4();
     const timestamp = Math.floor(Date.now() / 1000);
 
-    // Get the nonce model
-    const NonceModel = getNonceModel();
-
     // Store the nonce with an expiration (10 minutes)
-    await NonceModel.create({
+    await Nonce.create({
       nonce,
       timestamp,
       expires: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes expiration

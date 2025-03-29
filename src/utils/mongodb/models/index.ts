@@ -4,10 +4,6 @@
  */
 
 /**
- * MongoDB models exports
+ * Just re-export from models.ts
  */
-
-// Export all model functions and interfaces
-export * from './Nonce';
-export * from './ContributionDraft';
-export * from './EvaluationResultCache';
+export * from '../models';

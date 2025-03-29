@@ -2,8 +2,7 @@
  * ACRONTU evaluation service class
  * Orchestrates the contribution evaluation process
  */
-import { MongoDBClient, getContributionDraftModel, getEvaluationResultCacheModel } from '../mongodb';
-import { IContributionDraft } from '../mongodb/models/ContributionDraft';
+import { MongoDBClient, ContributionDraft, EvaluationResultCache, IContributionDraft } from '../mongodb';
 import { FilecoinClient, FilecoinContent } from '../filecoin';
 import { BlockchainClient } from '../blockchain';
 import { AIEvaluator, AggregatedEvaluation } from '../ai';
@@ -97,7 +96,6 @@ export class ACRONTUEvaluationService {
 
     try {
       // Get the contribution from MongoDB
-      const ContributionDraft = getContributionDraftModel();
       const contribution = await ContributionDraft.findById(contributionId);
 
       if (!contribution) {
@@ -134,7 +132,6 @@ export class ACRONTUEvaluationService {
 
       // Update status back to pending on error
       try {
-        const ContributionDraft = getContributionDraftModel();
         const contribution = await ContributionDraft.findById(contributionId);
         if (contribution && contribution.status === 'processing') {
           contribution.status = 'pending';
@@ -301,8 +298,6 @@ export class ACRONTUEvaluationService {
     console.log(`Caching evaluation result for contribution: ${contributionId}`);
 
     try {
-      const EvaluationResultCache = getEvaluationResultCacheModel();
-
       // Store individual model evaluations
       for (const result of evaluationResult.modelResults) {
         await EvaluationResultCache.create({
@@ -344,7 +339,6 @@ export class ACRONTUEvaluationService {
 
     try {
       // Get pending contributions from MongoDB
-      const ContributionDraft = getContributionDraftModel();
       const pendingContributions = await ContributionDraft.find({
         status: 'pending'
       }).limit(batchSize);

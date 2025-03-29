@@ -1,5 +1,5 @@
 /**
- * ContributionDraft model for ABSTRACTU
+ * ContributionDraft schema for ABSTRACTU
  * Manages draft contributions before they are published to the blockchain
  */
 import mongoose, { Document, Schema } from 'mongoose';
@@ -37,7 +37,7 @@ export interface IContributionDraft extends Document {
 /**
  * Schema for ContributionDraft 
  */
-const ContributionDraftSchema = new Schema<IContributionDraft>({
+export const contributionDraftSchema = new Schema<IContributionDraft>({
   // Core fields
   contributorAddress: {
     type: String,
@@ -108,11 +108,4 @@ const ContributionDraftSchema = new Schema<IContributionDraft>({
   evaluationTimestamp: {
     type: Date
   }
-});
-
-// Export the model (with safe model creation)
-export const getContributionDraftModel = () => {
-  const modelName = 'ContributionDraft';
-  return mongoose.models[modelName] ||
-    mongoose.model<IContributionDraft>(modelName, ContributionDraftSchema);
-}; 
+}); 

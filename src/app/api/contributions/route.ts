@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MongoDBClient, getContributionDraftModel } from '@/utils/mongodb';
+import { MongoDBClient, ContributionDraft } from '@/utils/mongodb';
 import { authMiddleware } from '@/utils/auth/middleware';
 
 /**
@@ -18,16 +18,15 @@ export async function GET(request: NextRequest) {
     const mongoClient = MongoDBClient.getInstance();
     await mongoClient.connect();
 
-    // Query for contributions
-    const ContributionDraft = getContributionDraftModel();
+    // Get all contributions the user has access to
     const contributions = await ContributionDraft.find({
-      contributorAddress: user.address
-    }).sort({ updatedAt: -1 });
+      $or: [
+        { contributorAddress: user.address }, // User's own contributions
+        { status: 'approved' } // Approved contributions (anyone can see)
+      ]
+    }).sort({ updatedAt: -1 }); // Sort by most recently updated
 
-    return NextResponse.json({
-      total: contributions.length,
-      contributions
-    });
+    return NextResponse.json(contributions);
   } catch (error) {
     console.error('Error fetching contributions:', error);
     return NextResponse.json(
@@ -69,7 +68,6 @@ export async function POST(request: NextRequest) {
     await mongoClient.connect();
 
     // Create contribution draft
-    const ContributionDraft = getContributionDraftModel();
     const newContribution = new ContributionDraft({
       contributorAddress: user.address,
       title,

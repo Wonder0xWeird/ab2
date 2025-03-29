@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MongoDBClient, getContributionDraftModel } from '@/utils/mongodb';
+import { MongoDBClient, ContributionDraft } from '@/utils/mongodb';
 import { BlockchainClient } from '@/utils/blockchain';
 import { authMiddleware } from '@/utils/auth/middleware';
 
@@ -23,7 +23,6 @@ export async function POST(
     await mongoClient.connect();
 
     // Get contribution
-    const ContributionDraft = getContributionDraftModel();
     const contribution = await ContributionDraft.findById(params.id);
 
     if (!contribution) {

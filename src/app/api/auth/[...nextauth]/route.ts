@@ -2,7 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
-import { MongoDBClient, getNonceModel } from '@/utils/mongodb';
+import { MongoDBClient, Nonce } from '@/utils/mongodb';
 import { generateAuthToken } from "@/utils/auth/middleware";
 
 /**
@@ -45,22 +45,21 @@ const authOptions: AuthOptions = {
           const timestamp = parseInt(credentials.timestamp);
           const currentTime = Math.floor(Date.now() / 1000);
           if (currentTime - timestamp > 5 * 60) {
-            throw new Error("Timestamp too old (more than 5 minutes)");
+            throw new Error("Expired");
           }
 
           // Get the nonce model and verify the nonce
-          const NonceModel = getNonceModel();
-          const nonceRecord = await NonceModel.findOne({
+          const nonceRecord = await Nonce.findOne({
             nonce: credentials.nonce,
             timestamp: timestamp
           });
 
           if (!nonceRecord) {
-            throw new Error("Invalid nonce");
+            throw new Error("Invalid");
           }
 
           // Delete the nonce to prevent replay attacks
-          await NonceModel.deleteOne({
+          await Nonce.deleteOne({
             nonce: credentials.nonce,
             timestamp: timestamp
           });

@@ -1,5 +1,5 @@
 /**
- * Nonce model for ABSTRACTU
+ * Nonce schema for ABSTRACTU
  * Used for SIWE authentication to prevent replay attacks
  */
 import mongoose, { Document, Schema } from 'mongoose';
@@ -16,7 +16,7 @@ export interface INonce extends Document {
 /**
  * Schema for AuthNonce
  */
-const NonceSchema = new Schema<INonce>({
+export const nonceSchema = new Schema<INonce>({
   nonce: {
     type: String,
     required: true,
@@ -33,11 +33,4 @@ const NonceSchema = new Schema<INonce>({
     index: true,
     expires: 0 // TTL index: removes documents when current time > expires
   }
-});
-
-// Export the model (with safe model creation)
-export const getNonceModel = () => {
-  const modelName = 'AuthNonce';
-  return mongoose.models[modelName] ||
-    mongoose.model<INonce>(modelName, NonceSchema);
-}; 
+}); 
