@@ -2,7 +2,7 @@
  * EvaluationResultCache schema for ABSTRACTU
  * Stores cached evaluation results from foundation models
  */
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 /**
  * Interface for EvaluationResultCache document

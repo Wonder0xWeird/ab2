@@ -2,7 +2,7 @@
  * ContributionDraft schema for ABSTRACTU
  * Manages draft contributions before they are published to the blockchain
  */
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 /**
  * Interface for ContributionDraft document
