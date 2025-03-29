@@ -1,5 +1,5 @@
 import { getServerSession as nextAuthGetServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/auth/authOptions";
 
 /**
  * Get the authenticated session on the server side

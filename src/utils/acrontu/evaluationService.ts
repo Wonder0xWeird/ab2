@@ -206,7 +206,7 @@ export class ACRONTUEvaluationService {
       );
 
       // 4. Cache the evaluation result
-      await this.cacheEvaluationResult(contribution._id.toString(), evaluationResult);
+      await this.cacheEvaluationResult(String(contribution._id), evaluationResult);
 
       console.log(`Successfully accepted contribution: ${contribution._id}`);
     } catch (error) {
@@ -243,7 +243,7 @@ export class ACRONTUEvaluationService {
       }
 
       // 3. Cache the evaluation result
-      await this.cacheEvaluationResult(contribution._id.toString(), evaluationResult);
+      await this.cacheEvaluationResult(String(contribution._id), evaluationResult);
 
       console.log(`Successfully rejected contribution: ${contribution._id}`);
     } catch (error) {
@@ -253,7 +253,7 @@ export class ACRONTUEvaluationService {
   }
 
   /**
-   * Store a contribution on Filecoin
+   * Store contribution content on Filecoin
    * @param contribution The contribution to store
    * @param evaluationResult The evaluation result
    */
@@ -261,29 +261,26 @@ export class ACRONTUEvaluationService {
     contribution: IContributionDraft,
     evaluationResult: AggregatedEvaluation
   ): Promise<string> {
-    console.log(`Storing contribution on Filecoin: ${contribution._id}`);
+    console.log(`Storing contribution ${contribution._id} on Filecoin`);
 
-    // Prepare the content package
-    const contentPackage: FilecoinContent = {
+    // Prepare the content for Filecoin storage
+    const content: FilecoinContent = {
+      title: contribution.title,
+      description: contribution.description,
       content: contribution.content,
       metadata: {
-        title: contribution.title,
-        description: contribution.description,
         contributorAddress: contribution.contributorAddress,
         timestamp: new Date().toISOString(),
+        parentId: contribution.parentContributionId,
+        relatedIds: contribution.relatedContributionIds,
         evaluationScore: evaluationResult.overallScore,
-        criteriaScores: evaluationResult.criteriaScores,
         evaluationFeedback: evaluationResult.feedback,
-        parentContributionId: contribution.parentContributionId,
-        relatedContributionIds: contribution.relatedContributionIds
+        criteriaScores: evaluationResult.criteriaScores
       }
     };
 
-    // Store on Filecoin
-    const cid = await this.filecoinClient.storeContent(contentPackage);
-    console.log(`Stored contribution on Filecoin with CID: ${cid}`);
-
-    return cid;
+    // Store the content on Filecoin
+    return await this.filecoinClient.storeContent(content);
   }
 
   /**
@@ -319,9 +316,8 @@ export class ACRONTUEvaluationService {
   }
 
   /**
-   * Process pending contributions in batches
-   * @param batchSize Maximum number of contributions to process in this batch
-   * @returns Object with process statistics
+   * Process pending contributions
+   * @param batchSize Maximum number of contributions to process
    */
   public async processPendingContributions(batchSize: number = 5): Promise<{
     processed: number;
@@ -331,60 +327,40 @@ export class ACRONTUEvaluationService {
   }> {
     this.validateInitialized();
 
-    console.log(`Processing pending contributions (batch size: ${batchSize})`);
+    console.log(`Processing up to ${batchSize} pending contributions`);
 
+    let processed = 0;
     let approved = 0;
     let rejected = 0;
     let errors = 0;
 
     try {
-      // Get pending contributions from MongoDB
-      const pendingContributions = await ContributionDraft.find({
-        status: 'pending'
-      }).limit(batchSize);
+      // Get pending contributions
+      const pendingContributions = await ContributionDraft.find({ status: 'pending' })
+        .limit(batchSize)
+        .sort({ createdAt: 1 });
 
       console.log(`Found ${pendingContributions.length} pending contributions`);
 
       // Process each contribution
-      const processingResults = await Promise.allSettled(
-        pendingContributions.map(contribution => {
-          // Explicitly cast the document to IContributionDraft type
-          const typedContribution = contribution as IContributionDraft;
-          const contributionId = typedContribution._id.toString();
+      for (const contribution of pendingContributions) {
+        try {
+          await this.processContribution(String(contribution._id));
+          processed++;
 
-          return this.processContribution(contributionId)
-            .then(() => {
-              // Check final status after processing
-              return ContributionDraft.findById(contributionId);
-            });
-        })
-      );
-
-      // Count results
-      for (const result of processingResults) {
-        if (result.status === 'fulfilled') {
-          const processedContribution = result.value;
-          if (processedContribution) {
-            if (processedContribution.status === 'approved') {
-              approved++;
-            } else if (processedContribution.status === 'rejected') {
-              rejected++;
-            }
+          // Update counts based on status
+          if (contribution.status === 'approved') {
+            approved++;
+          } else if (contribution.status === 'rejected') {
+            rejected++;
           }
-        } else {
+        } catch (error) {
+          console.error(`Error processing contribution ${contribution._id}:`, error);
           errors++;
         }
       }
 
-      console.log(`Completed batch processing of ${pendingContributions.length} contributions`);
-      console.log(`Approved: ${approved}, Rejected: ${rejected}, Errors: ${errors}`);
-
-      return {
-        processed: pendingContributions.length,
-        approved,
-        rejected,
-        errors
-      };
+      return { processed, approved, rejected, errors };
     } catch (error) {
       console.error('Error processing pending contributions:', error);
       throw error;

@@ -8,13 +8,10 @@ import { authMiddleware } from '@/utils/auth/middleware';
  */
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  // Handle params as potentially being a Promise in Next.js 15
-  const params = await (context.params instanceof Promise
-    ? context.params
-    : Promise.resolve(context.params));
-
+  // Get params from the Promise
+  const params = await context.params;
   const { id } = params;
 
   // Get user from auth
@@ -56,13 +53,10 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  // Handle params as potentially being a Promise in Next.js 15
-  const params = await (context.params instanceof Promise
-    ? context.params
-    : Promise.resolve(context.params));
-
+  // Get params from the Promise
+  const params = await context.params;
   const { id } = params;
 
   // Get user from auth

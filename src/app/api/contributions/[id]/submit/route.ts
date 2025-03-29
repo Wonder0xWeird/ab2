@@ -9,13 +9,10 @@ import { authMiddleware } from '@/utils/auth/middleware';
  */
 export async function POST(
   request: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  // Handle params as potentially being a Promise in Next.js 15
-  const params = await (context.params instanceof Promise
-    ? context.params
-    : Promise.resolve(context.params));
-
+  // Get params from the Promise
+  const params = await context.params;
   const { id } = params;
 
   // Get user from auth

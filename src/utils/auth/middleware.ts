@@ -58,13 +58,6 @@ export async function authMiddleware(request: NextRequest): Promise<Authenticate
 export function generateAuthToken(address: string, expiresIn: string = '7d'): string {
   const jwtSecret = process.env.JWT_SECRET || 'development-secret';
 
-  const token = jwt.sign(
-    {
-      address,
-    },
-    jwtSecret,
-    { expiresIn }
-  );
-
-  return token;
+  // @ts-expect-error - ignore the type checking for the jwt.sign parameters
+  return jwt.sign({ address }, jwtSecret, { expiresIn });
 } 
