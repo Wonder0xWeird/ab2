@@ -8,8 +8,10 @@ import { authMiddleware } from '@/utils/auth/middleware';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
   // Get user from auth
   const user = await authMiddleware(request);
   if (!user) {
@@ -22,7 +24,7 @@ export async function GET(
     await mongoClient.connect();
 
     // Get contribution
-    const contribution = await ContributionDraft.findById(params.id);
+    const contribution = await ContributionDraft.findById(id);
 
     if (!contribution) {
       return NextResponse.json({ error: 'Contribution not found' }, { status: 404 });
@@ -49,8 +51,10 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
   // Get user from auth
   const user = await authMiddleware(request);
   if (!user) {
@@ -65,7 +69,7 @@ export async function PUT(
     await mongoClient.connect();
 
     // Get contribution
-    const contribution = await ContributionDraft.findById(params.id);
+    const contribution = await ContributionDraft.findById(id);
 
     if (!contribution) {
       return NextResponse.json({ error: 'Contribution not found' }, { status: 404 });
@@ -86,7 +90,7 @@ export async function PUT(
 
     // Update the contribution
     const updatedContribution = await ContributionDraft.findByIdAndUpdate(
-      params.id,
+      id,
       {
         title: title || contribution.title,
         description: description || contribution.description,
