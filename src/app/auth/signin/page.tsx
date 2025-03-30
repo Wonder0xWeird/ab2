@@ -65,18 +65,31 @@ function SignInContent() {
       console.log("User is authenticated, redirecting");
       setRedirectInProgress(true); // Prevent multiple redirects
 
-      if (returnToContribute) {
-        console.log("Redirecting to contribute subdomain");
-        // Redirect to contribute subdomain
-        if (process.env.NODE_ENV === 'development') {
-          router.push("/contribute");
-        } else {
-          window.location.href = "https://contribute.ab2.observer";
+      // Check if we have a callbackUrl in the URL parameters
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const callbackUrl = urlParams.get('callbackUrl');
+
+        // Return to contribute subdomain takes precedence over callbackUrl
+        if (returnToContribute) {
+          console.log("Redirecting to contribute subdomain");
+          // Redirect to contribute subdomain
+          if (process.env.NODE_ENV === 'development') {
+            router.push("/contribute");
+          } else {
+            window.location.href = "https://contribute.ab2.observer";
+          }
         }
-      } else {
-        console.log("Redirecting to main domain contribute page");
-        // Redirect to contribute page on main domain
-        router.push("/contribute");
+        // If callbackUrl exists, redirect to it
+        else if (callbackUrl) {
+          console.log("Redirecting to callback URL:", callbackUrl);
+          router.push(decodeURIComponent(callbackUrl));
+        }
+        // Default fallback to contribute page on main domain
+        else {
+          console.log("Redirecting to main domain contribute page");
+          router.push("/contribute");
+        }
       }
     }
   }, [session, status, router, returnToContribute, redirectInProgress]);
@@ -176,6 +189,10 @@ function SignInContent() {
       setRedirectInProgress(true);
       console.log("Authentication successful, preparing to redirect");
 
+      // Get callback URL from URL parameters if it exists
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get('callbackUrl');
+
       // Redirect after successful sign-in based on origin
       if (returnToContribute) {
         console.log("Redirecting to contribute subdomain after successful sign-in");
@@ -186,7 +203,14 @@ function SignInContent() {
           // For production, redirect to subdomain
           window.location.href = "https://contribute.ab2.observer";
         }
-      } else {
+      }
+      // If callbackUrl exists, redirect to it
+      else if (callbackUrl) {
+        console.log("Redirecting to callback URL after successful sign-in:", callbackUrl);
+        router.push(decodeURIComponent(callbackUrl));
+      }
+      // Default fallback
+      else {
         console.log("Redirecting to main domain contribute page after successful sign-in");
         // Standard redirect to main domain's contribute page
         router.push("/contribute");

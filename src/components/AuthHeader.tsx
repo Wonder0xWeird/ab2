@@ -17,6 +17,14 @@ export default function AuthHeader() {
   const { data: session } = useSession();
   const [isExpanded, setIsExpanded] = useState(false);
   const [ensName, setEnsName] = useState<string | null>(null);
+  const [currentPath, setCurrentPath] = useState<string>('');
+
+  // Get current path on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentPath(window.location.pathname + window.location.search);
+    }
+  }, []);
 
   // Fetch ENS name when address changes
   useEffect(() => {
@@ -55,14 +63,13 @@ export default function AuthHeader() {
       if (isContributeSubdomain) {
         return "https://ab2.observer/auth/signin?returnToContribute=true";
       }
+
+      // For main domain or local development, include the callbackUrl to return to current page
+      const callbackUrl = encodeURIComponent(currentPath || '/');
+      return `/auth/signin?callbackUrl=${callbackUrl}`;
     }
 
-    // If we're on the main domain, just use relative path
-    if (typeof window !== 'undefined' && window.location.hostname === 'ab2.observer') {
-      return "/auth/signin";
-    }
-
-    // For local development or other cases
+    // Fallback for SSR context
     return "/auth/signin";
   };
 
@@ -75,8 +82,8 @@ export default function AuthHeader() {
       // On contribute subdomain, redirect to main domain
       await signOut({ callbackUrl: "https://ab2.observer" });
     } else {
-      // On main domain, redirect to home
-      await signOut({ callbackUrl: "/" });
+      // On main domain, redirect to current page
+      await signOut({ callbackUrl: currentPath || '/' });
     }
   };
 
