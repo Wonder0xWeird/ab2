@@ -6,7 +6,11 @@ import Link from "next/link";
 /**
  * Displays the user's authentication status
  */
-export default function AuthStatus() {
+interface AuthStatusProps {
+  className?: string;
+}
+
+export default function AuthStatus({ className = "" }: AuthStatusProps) {
   const { data: session } = useSession();
 
   // Determine the login URL - always use the main domain
@@ -20,7 +24,7 @@ export default function AuthStatus() {
   };
 
   return (
-    <div>
+    <div className={className}>
       {session?.user ? (
         <span>
           Signed in as {session.user.name}
