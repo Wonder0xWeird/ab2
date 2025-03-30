@@ -9,17 +9,42 @@ export default function ContributePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [isContributeSubdomain, setIsContributeSubdomain] = useState(false);
+
+  // Check if we're on the contribute subdomain
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      setIsContributeSubdomain(hostname === 'contribute.ab2.observer');
+
+      // For development, always handle as normal
+      if (process.env.NODE_ENV === 'development') {
+        setIsContributeSubdomain(false);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.replace("/auth/signin");
+      // If on contribute subdomain, redirect to sign-in with return flag
+      if (isContributeSubdomain) {
+        window.location.href = "https://ab2.observer/auth/signin?returnToContribute=true";
+      } else {
+        // Standard redirect to sign-in
+        router.replace("/auth/signin");
+      }
     } else if (status === "authenticated") {
       setLoading(false);
     }
-  }, [status, router]);
+  }, [status, router, isContributeSubdomain]);
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
+    // If on contribute subdomain, sign out to main domain
+    if (isContributeSubdomain) {
+      await signOut({ callbackUrl: "https://ab2.observer" });
+    } else {
+      await signOut({ callbackUrl: "/" });
+    }
   };
 
   if (loading) {
@@ -53,10 +78,16 @@ export default function ContributePage() {
           <div className="contribute-actions">
             <h2>Contribution Actions</h2>
             <div className="button-group">
-              <Link href="/contribute/my-contributions" className="action-button">
+              <Link
+                href={isContributeSubdomain ? "https://contribute.ab2.observer/my-contributions" : "/contribute/my-contributions"}
+                className="action-button"
+              >
                 View My Contributions
               </Link>
-              <Link href="/contribute/new" className="action-button">
+              <Link
+                href={isContributeSubdomain ? "https://contribute.ab2.observer/new" : "/contribute/new"}
+                className="action-button"
+              >
                 Create New Contribution
               </Link>
               <button onClick={handleSignOut} className="signout-button">
@@ -69,7 +100,10 @@ export default function ContributePage() {
         <div className="error-card">
           <h2>Authentication Error</h2>
           <p>Your session appears to be invalid. Please sign in again.</p>
-          <Link href="/auth/signin" className="signin-link">
+          <Link
+            href={isContributeSubdomain ? "https://ab2.observer/auth/signin?returnToContribute=true" : "/auth/signin"}
+            className="signin-link"
+          >
             Sign In
           </Link>
         </div>

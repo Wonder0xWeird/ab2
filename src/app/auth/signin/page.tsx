@@ -17,31 +17,71 @@ function SignInContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCorrectDomain, setIsCorrectDomain] = useState(true);
+  const [originDomain, setOriginDomain] = useState<string | null>(null);
+  const [returnToContribute, setReturnToContribute] = useState(false);
 
-  // Check if we're on the correct domain
+  // Check if we're on an allowed domain
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
-      // Make sure we're on the exact main domain
-      setIsCorrectDomain(hostname === 'ab2.observer');
+
+      // Save the original domain to know where to return the user
+      setOriginDomain(hostname);
+
+      // Check if we're on contribute subdomain
+      const isContributeSubdomain = hostname === 'contribute.ab2.observer';
+      if (isContributeSubdomain) {
+        setReturnToContribute(true);
+      }
+
+      // We're on a correct domain if it's either the main domain or the contribute subdomain
+      const isMainDomain = hostname === 'ab2.observer';
+      setIsCorrectDomain(isMainDomain);
+
+      // For local development
+      if (process.env.NODE_ENV === 'development') {
+        setIsCorrectDomain(true);
+      }
     }
   }, []);
 
   useEffect(() => {
-    // If the user is already signed in, redirect to contribute
+    // If the user is already signed in, redirect to the appropriate domain
     if (status === "authenticated" && session?.user?.address) {
-      router.push("/contribute");
+      if (returnToContribute) {
+        // Redirect to contribute subdomain
+        if (process.env.NODE_ENV === 'development') {
+          router.push("/contribute");
+        } else {
+          window.location.href = "https://contribute.ab2.observer";
+        }
+      } else {
+        // Redirect to contribute page on main domain
+        router.push("/contribute");
+      }
     }
-  }, [session, status, router]);
+  }, [session, status, router, returnToContribute]);
 
   // Redirect to the main domain if we're not on it already
   useEffect(() => {
     if (!isCorrectDomain && typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
       const queryParams = window.location.search;
-      window.location.href = `https://ab2.observer${currentPath}${queryParams}`;
+      // Add a parameter to remember that we need to redirect back to the contribute subdomain
+      const redirectParam = returnToContribute ? '&returnToContribute=true' : '';
+      window.location.href = `https://ab2.observer${currentPath}${queryParams}${queryParams ? redirectParam.replace('&', '&') : '?returnToContribute=true'}`;
     }
-  }, [isCorrectDomain]);
+  }, [isCorrectDomain, returnToContribute]);
+
+  // Check URL parameters for returnToContribute flag
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('returnToContribute') === 'true') {
+        setReturnToContribute(true);
+      }
+    }
+  }, []);
 
   const handleSignIn = async () => {
     try {
@@ -108,8 +148,19 @@ function SignInContent() {
         throw new Error(authResponse.error);
       }
 
-      // Redirect to contribute after successful sign-in
-      router.push("/contribute");
+      // Redirect after successful sign-in based on origin
+      if (returnToContribute) {
+        // For development, use router
+        if (process.env.NODE_ENV === 'development') {
+          router.push("/contribute");
+        } else {
+          // For production, redirect to subdomain
+          window.location.href = "https://contribute.ab2.observer";
+        }
+      } else {
+        // Standard redirect to main domain's contribute page
+        router.push("/contribute");
+      }
     } catch (error: unknown) {
       console.error("Error signing in with Ethereum:", error);
       setError(error instanceof Error ? error.message : "Failed to sign in");

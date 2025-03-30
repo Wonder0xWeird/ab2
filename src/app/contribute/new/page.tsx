@@ -9,14 +9,34 @@ export default function NewContributionPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [isContributeSubdomain, setIsContributeSubdomain] = useState(false);
+
+  // Check if we're on the contribute subdomain
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      setIsContributeSubdomain(hostname === 'contribute.ab2.observer');
+
+      // For development, always handle as normal
+      if (process.env.NODE_ENV === 'development') {
+        setIsContributeSubdomain(false);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.replace("/auth/signin");
+      // If on contribute subdomain, redirect to sign-in with return flag
+      if (isContributeSubdomain) {
+        window.location.href = "https://ab2.observer/auth/signin?returnToContribute=true";
+      } else {
+        // Standard redirect to sign-in
+        router.replace("/auth/signin");
+      }
     } else if (status === "authenticated") {
       setLoading(false);
     }
-  }, [status, router]);
+  }, [status, router, isContributeSubdomain]);
 
   if (loading) {
     return (
@@ -56,7 +76,10 @@ export default function NewContributionPage() {
             </div>
 
             <div className="form-actions">
-              <Link href="/contribute" className="cancel-button">
+              <Link
+                href={isContributeSubdomain ? "https://contribute.ab2.observer" : "/contribute"}
+                className="cancel-button"
+              >
                 Cancel
               </Link>
               <button className="submit-button">
@@ -69,7 +92,10 @@ export default function NewContributionPage() {
         <div className="error-card">
           <h2>Authentication Error</h2>
           <p>Your session appears to be invalid. Please sign in again.</p>
-          <Link href="/auth/signin" className="signin-link">
+          <Link
+            href={isContributeSubdomain ? "https://ab2.observer/auth/signin?returnToContribute=true" : "/auth/signin"}
+            className="signin-link"
+          >
             Sign In
           </Link>
         </div>
