@@ -120,6 +120,18 @@ async function getAvailablePages(): Promise<PageInfo[]> {
           titleLetter: 'D',
           tagline: 'Mapping the patterns.'
         });
+      } else if (dir.name === 'dashboard' || dir.name === 'contribute') {
+        // Special handling for contribute - uses a different URL in production
+        const contributeUrl = isDevelopment ? '/contribute' : 'https://contribute.ab2.observer';
+        pages.push({
+          name: 'contribute',
+          path: contributeUrl,
+          title: 'CONTRIBUTE',
+          description: 'Submit and manage your contributions',
+          isExternal: !isDevelopment,
+          titleLetter: 'C',
+          tagline: 'Add your abstraction'
+        });
       } else if (dir.name === 'observer') {
         // Skip observer itself to avoid circular navigation
         continue;
