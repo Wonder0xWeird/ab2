@@ -7,9 +7,6 @@ import Button from "./Button";
 
 // Constants for the gold color palette (from theme.ts)
 const GOLD_COLOR = "#cc9c42";
-const GOLD_HOVER = "#d9b571";
-const GOLD_ACTIVE = "#b58731";
-const SHADOW_COLOR = "#141921";
 
 /**
  * AuthHeader component that shows the user's authentication status
