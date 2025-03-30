@@ -90,8 +90,8 @@ async function getAvailablePages(): Promise<PageInfo[]> {
 
     // Process each directory
     for (const dir of directories) {
-      // Skip special directories like api
-      if (dir.name === 'api' || dir.name.startsWith('_')) {
+      // Skip special directories like api, auth, observer
+      if (dir.name === 'api' || dir.name.startsWith('_') || dir.name === 'observer' || dir.name === 'auth') {
         continue;
       }
 
@@ -121,20 +121,20 @@ async function getAvailablePages(): Promise<PageInfo[]> {
           tagline: 'Mapping the patterns.'
         });
       } else if (dir.name === 'dashboard' || dir.name === 'contribute') {
-        // Special handling for contribute - uses a different URL in production
-        const contributeUrl = isDevelopment ? '/contribute' : 'https://contribute.ab2.observer';
-        pages.push({
-          name: 'contribute',
-          path: contributeUrl,
-          title: 'CONTRIBUTE',
-          description: 'Submit and manage your contributions',
-          isExternal: !isDevelopment,
-          titleLetter: 'C',
-          tagline: 'Add your abstraction'
-        });
-      } else if (dir.name === 'observer') {
-        // Skip observer itself to avoid circular navigation
-        continue;
+        // Only add the contribute entry if we haven't already added it
+        if (!pages.some(p => p.name === 'contribute')) {
+          // Special handling for contribute - uses a different URL in production
+          const contributeUrl = isDevelopment ? '/contribute' : 'https://contribute.ab2.observer';
+          pages.push({
+            name: 'contribute',
+            path: contributeUrl,
+            title: 'CONTRIBUTE',
+            description: 'Submit and manage your contributions',
+            isExternal: !isDevelopment,
+            titleLetter: 'C',
+            tagline: 'Add your abstraction'
+          });
+        }
       } else {
         // Add other directories as pages
         const pageName = dir.name;
@@ -150,12 +150,14 @@ async function getAvailablePages(): Promise<PageInfo[]> {
       }
     }
 
-    // Add the home page
+    // Add the home page with the correct link
+    const homeUrl = isDevelopment ? '/' : 'https://ab2.observer';
     pages.push({
       name: 'home',
-      path: '/',
+      path: homeUrl,
       title: 'HOME',
       description: 'Main page',
+      isExternal: !isDevelopment,
       titleLetter: 'A',
       tagline: 'Abstraction to abstraction, Ab2 is.'
     });
