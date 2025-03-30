@@ -2,7 +2,14 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Button from "./Button";
+
+// Constants for the gold color palette (from theme.ts)
+const GOLD_COLOR = "#cc9c42";
+const GOLD_HOVER = "#d9b571";
+const GOLD_ACTIVE = "#b58731";
+const SHADOW_COLOR = "#141921";
 
 /**
  * AuthHeader component that shows the user's authentication status
@@ -12,6 +19,33 @@ import { useState } from "react";
 export default function AuthHeader() {
   const { data: session } = useSession();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [ensName, setEnsName] = useState<string | null>(null);
+
+  // Fetch ENS name when address changes
+  useEffect(() => {
+    async function fetchENSName() {
+      if (session?.user?.address) {
+        try {
+          // Using public ENS resolver API
+          const response = await fetch(`https://api.ensideas.com/ens/resolve/${session.user.address}`);
+          const data = await response.json();
+
+          if (data.name) {
+            setEnsName(data.name);
+          } else {
+            setEnsName(null);
+          }
+        } catch (error) {
+          console.error("Error fetching ENS name:", error);
+          setEnsName(null);
+        }
+      } else {
+        setEnsName(null);
+      }
+    }
+
+    fetchENSName();
+  }, [session?.user?.address]);
 
   // Determine the login URL - always use the main domain
   const getLoginUrl = () => {
@@ -60,13 +94,16 @@ export default function AuthHeader() {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 
+  // Determine the display text (ENS name or formatted address)
+  const displayName = ensName || (session?.user?.address ? formatAddress(session.user.address) : '');
+
   return (
     <div className={`auth-header ${isExpanded ? 'expanded' : ''}`}>
       <div className="card-header" onClick={toggleExpand}>
         {session?.user ? (
           <div className="user-info">
             <div className="status-dot connected" />
-            <span className="wallet-preview">{formatAddress(session.user.address || '')}</span>
+            <span className="wallet-preview">{displayName}</span>
           </div>
         ) : (
           <div className="user-info">
@@ -82,16 +119,25 @@ export default function AuthHeader() {
             <>
               <div className="wallet-details">
                 <p className="wallet-label">Connected Wallet:</p>
+                {ensName && (
+                  <p className="ens-name">{ensName}</p>
+                )}
                 <p className="wallet-address">{session.user.address}</p>
               </div>
-              <button onClick={handleSignOut} className="signout-button">
-                Sign Out
-              </button>
+              <div className="button-container">
+                <Button variant="danger" onClick={handleSignOut} fullWidth>
+                  Sign Out
+                </Button>
+              </div>
             </>
           ) : (
-            <Link href={getLoginUrl()} className="signin-button">
-              Sign In
-            </Link>
+            <div className="button-container">
+              <Link href={getLoginUrl()} className="link-no-style">
+                <Button variant="brand" fullWidth>
+                  Sign In
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       )}
@@ -176,6 +222,13 @@ export default function AuthHeader() {
           margin-bottom: 0.25rem;
         }
         
+        .ens-name {
+          font-size: 0.85rem;
+          color: ${GOLD_COLOR};
+          margin-bottom: 0.25rem;
+          font-weight: bold;
+        }
+        
         .wallet-address {
           font-family: monospace;
           font-size: 0.8rem;
@@ -184,44 +237,19 @@ export default function AuthHeader() {
           border-radius: 4px;
           word-break: break-all;
           color: #e0e0e0;
+          margin-bottom: 1rem;
         }
         
-        .signout-button {
-          background-color: rgba(220, 53, 69, 0.2);
-          color: #ff6b6b;
-          border: 1px solid rgba(220, 53, 69, 0.4);
-          padding: 0.5rem 0.75rem;
-          border-radius: 4px;
-          font-weight: bold;
-          font-size: 0.875rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
+        .button-container {
           width: 100%;
         }
         
-        .signout-button:hover {
-          background-color: rgba(220, 53, 69, 0.3);
-        }
-        
-        .signin-button {
-          display: block;
-          background-color: #FFD700;
-          color: #000;
-          border: none;
-          padding: 0.5rem 0.75rem;
-          border-radius: 4px;
-          font-weight: bold;
-          font-size: 0.875rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-align: center;
+        .link-no-style {
           text-decoration: none;
-        }
-        
-        .signin-button:hover {
-          background-color: #E6C200;
+          width: 100%;
+          display: block;
         }
       `}</style>
     </div>
   );
-} 
+}
