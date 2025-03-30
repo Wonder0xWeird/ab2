@@ -6,6 +6,7 @@ import { useAccount, useSignMessage, useDisconnect } from "wagmi";
 import { getCsrfToken, signIn, useSession } from "next-auth/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
 
 // Create a separate client component that wraps the wallet functionality
 function SignInContent() {
@@ -295,13 +296,16 @@ function SignInContent() {
         </div>
 
         {isConnected && (
-          <button
-            disabled={loading}
-            onClick={handleSignIn}
-            className="sign-button"
-          >
-            {loading ? "Signing..." : "Sign-in with Ethereum"}
-          </button>
+          <div className="button-container">
+            <Button
+              variant="brand"
+              disabled={loading}
+              onClick={handleSignIn}
+              fullWidth
+            >
+              {loading ? "Signing..." : "Sign-in with Ethereum"}
+            </Button>
+          </div>
         )}
 
         {error && (
@@ -347,25 +351,9 @@ function SignInContent() {
           justify-content: center;
         }
         
-        .sign-button {
-          background-color: #FFD700;
-          color: #000;
-          border: none;
-          padding: 0.75rem 1.5rem;
-          border-radius: 4px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: all 0.2s ease;
+        .button-container {
+          margin-top: 1rem;
           width: 100%;
-        }
-        
-        .sign-button:hover {
-          background-color: #E6C200;
-        }
-        
-        .sign-button:disabled {
-          background-color: #665c00;
-          cursor: not-allowed;
         }
         
         .error-message {
