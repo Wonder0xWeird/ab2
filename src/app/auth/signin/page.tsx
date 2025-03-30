@@ -18,6 +18,7 @@ function SignInContent() {
   const [error, setError] = useState<string | null>(null);
   const [isCorrectDomain, setIsCorrectDomain] = useState(true);
   const [returnToContribute, setReturnToContribute] = useState(false);
+  const [redirectInProgress, setRedirectInProgress] = useState(false);
 
   // Check if we're on an allowed domain
   useEffect(() => {
@@ -30,7 +31,7 @@ function SignInContent() {
         setReturnToContribute(true);
       }
 
-      // We're on a correct domain if it's either the main domain or the contribute subdomain
+      // We're on a correct domain if it's the main domain (not the contribute subdomain)
       const isMainDomain = hostname === 'ab2.observer';
       setIsCorrectDomain(isMainDomain);
 
@@ -41,9 +42,21 @@ function SignInContent() {
     }
   }, []);
 
+  // Check URL parameters for returnToContribute flag
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('returnToContribute') === 'true') {
+        setReturnToContribute(true);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     // If the user is already signed in, redirect to the appropriate domain
-    if (status === "authenticated" && session?.user?.address) {
+    if (status === "authenticated" && session?.user?.address && !redirectInProgress) {
+      setRedirectInProgress(true); // Prevent multiple redirects
+
       if (returnToContribute) {
         // Redirect to contribute subdomain
         if (process.env.NODE_ENV === 'development') {
@@ -56,28 +69,23 @@ function SignInContent() {
         router.push("/contribute");
       }
     }
-  }, [session, status, router, returnToContribute]);
+  }, [session, status, router, returnToContribute, redirectInProgress]);
 
   // Redirect to the main domain if we're not on it already
   useEffect(() => {
-    if (!isCorrectDomain && typeof window !== 'undefined') {
+    if (!isCorrectDomain && typeof window !== 'undefined' && !redirectInProgress) {
+      setRedirectInProgress(true); // Prevent multiple redirects
+
       const currentPath = window.location.pathname;
       const queryParams = window.location.search;
       // Add a parameter to remember that we need to redirect back to the contribute subdomain
       const redirectParam = returnToContribute ? '&returnToContribute=true' : '';
-      window.location.href = `https://ab2.observer${currentPath}${queryParams}${queryParams ? redirectParam.replace('&', '&') : '?returnToContribute=true'}`;
-    }
-  }, [isCorrectDomain, returnToContribute]);
+      const redirectUrl = `https://ab2.observer${currentPath}${queryParams}${queryParams ? redirectParam : '?returnToContribute=true'}`;
 
-  // Check URL parameters for returnToContribute flag
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('returnToContribute') === 'true') {
-        setReturnToContribute(true);
-      }
+      console.log("Redirecting to main domain:", redirectUrl);
+      window.location.href = redirectUrl;
     }
-  }, []);
+  }, [isCorrectDomain, returnToContribute, redirectInProgress]);
 
   const handleSignIn = async () => {
     try {
@@ -143,6 +151,9 @@ function SignInContent() {
         setError(authResponse.error);
         throw new Error(authResponse.error);
       }
+
+      // Prevent redirect loop by setting a flag
+      setRedirectInProgress(true);
 
       // Redirect after successful sign-in based on origin
       if (returnToContribute) {

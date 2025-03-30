@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const { pathname, hostname } = request.nextUrl;
+  const { pathname, hostname, searchParams } = request.nextUrl;
 
   // If there's an error with the CSRF endpoint, log it for debugging
   if (pathname === '/api/auth/csrf') {
@@ -10,17 +10,30 @@ export function middleware(request: NextRequest) {
     console.log('CSRF request headers:', Object.fromEntries(request.headers));
   }
 
-  // For authentication-related pages, ensure we're on the main domain
-  if ((pathname.startsWith('/auth/signin') || pathname === '/auth') &&
-    !hostname.match(/^ab2\.observer$/)) {
-    // Create the redirect URL to the main domain
+  // Check if we're on the contribute subdomain
+  const isContributeSubdomain = hostname === 'contribute.ab2.observer';
+
+  // Check if returnToContribute parameter is present
+  const returnToContribute = searchParams.get('returnToContribute') === 'true';
+
+  // Only redirect auth paths when on contribute subdomain and no returnToContribute flag
+  if (pathname.startsWith('/auth/signin') &&
+    isContributeSubdomain &&
+    !returnToContribute) {
+
+    // Create the redirect URL to the main domain with the returnToContribute parameter
     const redirectUrl = new URL(
       pathname,
       `https://ab2.observer`
     );
 
-    // Copy any query parameters
+    // Copy query parameters
     redirectUrl.search = request.nextUrl.search;
+
+    // Add returnToContribute parameter if not present
+    if (!returnToContribute) {
+      redirectUrl.searchParams.set('returnToContribute', 'true');
+    }
 
     console.log(`Redirecting from ${hostname}${pathname} to ${redirectUrl.toString()}`);
 

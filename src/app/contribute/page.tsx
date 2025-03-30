@@ -25,6 +25,8 @@ export default function ContributePage() {
   }, []);
 
   useEffect(() => {
+    // Break the redirect loop - only redirect if we're not loading
+    // and the status is definitively unauthenticated
     if (status === "unauthenticated") {
       // If on contribute subdomain, redirect to sign-in with return flag
       if (isContributeSubdomain) {
@@ -34,9 +36,13 @@ export default function ContributePage() {
         router.replace("/auth/signin");
       }
     } else if (status === "authenticated") {
+      // User is authenticated, we can show the content
       setLoading(false);
+    } else if (status === "loading" && session === null) {
+      // Status is still loading but no session yet
+      // Keep the loading state active
     }
-  }, [status, router, isContributeSubdomain]);
+  }, [status, router, isContributeSubdomain, session]);
 
   const handleSignOut = async () => {
     // If on contribute subdomain, sign out to main domain
@@ -47,7 +53,8 @@ export default function ContributePage() {
     }
   };
 
-  if (loading) {
+  // Show loading state longer to ensure we have a proper auth check
+  if (loading || status === "loading") {
     return (
       <div className="contribute-loading">
         <div className="spinner"></div>
