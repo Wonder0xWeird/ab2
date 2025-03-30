@@ -28,9 +28,9 @@ function SignInContent() {
   }, []);
 
   useEffect(() => {
-    // If the user is already signed in, redirect to dashboard
+    // If the user is already signed in, redirect to contribute
     if (status === "authenticated" && session?.user?.address) {
-      router.push("/dashboard");
+      router.push("/contribute");
     }
   }, [session, status, router]);
 
@@ -108,8 +108,8 @@ function SignInContent() {
         throw new Error(authResponse.error);
       }
 
-      // Redirect to dashboard after successful sign-in
-      router.push("/dashboard");
+      // Redirect to contribute after successful sign-in
+      router.push("/contribute");
     } catch (error: unknown) {
       console.error("Error signing in with Ethereum:", error);
       setError(error instanceof Error ? error.message : "Failed to sign in");

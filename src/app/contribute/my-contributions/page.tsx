@@ -44,7 +44,7 @@ export default function MyContributionsPage() {
 
           <div className="actions">
             <Link href="/contribute" className="back-button">
-              Back to Dashboard
+              Back to Contributions
             </Link>
             <Link href="/contribute/new" className="create-button">
               Create New Contribution
