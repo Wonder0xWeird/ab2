@@ -36,7 +36,10 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials, req) {
         try {
+          console.log("SIWE authorization attempt with CSRF token:", await getCsrfToken({ req }));
+
           if (!credentials?.message || !credentials?.signature || !credentials?.timestamp || !credentials?.nonce) {
+            console.error("SIWE missing credentials");
             throw new Error("Missing credentials");
           }
 
@@ -48,6 +51,7 @@ export const authOptions: AuthOptions = {
           const timestamp = parseInt(credentials.timestamp);
           const currentTime = Math.floor(Date.now() / 1000);
           if (currentTime - timestamp > 5 * 60) {
+            console.error("SIWE timestamp expired");
             throw new Error("Expired");
           }
 
@@ -58,6 +62,7 @@ export const authOptions: AuthOptions = {
           });
 
           if (!nonceRecord) {
+            console.error("SIWE invalid nonce");
             throw new Error("Invalid");
           }
 
@@ -75,6 +80,7 @@ export const authOptions: AuthOptions = {
 
           console.log("Expected domain:", domain);
           console.log("Message domain:", siwe.domain);
+          console.log("User address:", siwe.address.toLowerCase());
 
           const result = await siwe.verify({
             signature: credentials.signature,
@@ -83,6 +89,8 @@ export const authOptions: AuthOptions = {
           });
 
           if (result.success) {
+            console.log("SIWE verification successful for:", siwe.address.toLowerCase());
+
             // Generate JWT with user address
             const token = generateAuthToken(siwe.address.toLowerCase());
 
@@ -93,6 +101,8 @@ export const authOptions: AuthOptions = {
               authToken: token,
             };
           }
+
+          console.error("SIWE verification failed:", result);
           return null;
         } catch (error) {
           console.error("Error during SIWE authorization:", error);
@@ -103,9 +113,24 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+  },
+  cookies: {
+    // Configure cookies to work across subdomains
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.ab2.observer' : undefined,
+      },
+    },
   },
   callbacks: {
     async session({ session, token }) {
+      console.log("Session callback, user:", session?.user?.address || "no user");
       if (session.user) {
         session.user.address = token.sub?.toLowerCase();
         session.user.authToken = token.authToken;
@@ -114,6 +139,7 @@ export const authOptions: AuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
+        console.log("JWT callback, setting user:", user.address);
         token.sub = user.address;
         token.authToken = user.authToken;
       }
@@ -124,4 +150,5 @@ export const authOptions: AuthOptions = {
     signIn: "/auth/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 }; 

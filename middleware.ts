@@ -4,6 +4,9 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname, hostname, searchParams } = request.nextUrl;
 
+  // Debug logging to help diagnose the redirect issue
+  console.log(`Middleware processing: ${hostname}${pathname}${request.nextUrl.search}`);
+
   // If there's an error with the CSRF endpoint, log it for debugging
   if (pathname === '/api/auth/csrf') {
     console.log('CSRF request path:', pathname);
@@ -14,12 +17,14 @@ export function middleware(request: NextRequest) {
   const isContributeSubdomain = hostname === 'contribute.ab2.observer';
 
   // Check if returnToContribute parameter is present
+  const hasReturnToContribute = searchParams.has('returnToContribute');
   const returnToContribute = searchParams.get('returnToContribute') === 'true';
 
-  // Only redirect auth paths when on contribute subdomain and no returnToContribute flag
-  if (pathname.startsWith('/auth/signin') &&
+  // Only redirect auth paths when on contribute subdomain
+  // And don't redirect if we're already handling a returnToContribute flow
+  if (pathname.startsWith('/auth/') &&
     isContributeSubdomain &&
-    !returnToContribute) {
+    !hasReturnToContribute) {
 
     // Create the redirect URL to the main domain with the returnToContribute parameter
     const redirectUrl = new URL(
@@ -27,15 +32,15 @@ export function middleware(request: NextRequest) {
       `https://ab2.observer`
     );
 
-    // Copy query parameters
-    redirectUrl.search = request.nextUrl.search;
-
-    // Add returnToContribute parameter if not present
-    if (!returnToContribute) {
-      redirectUrl.searchParams.set('returnToContribute', 'true');
+    // Copy existing query parameters
+    for (const [key, value] of searchParams.entries()) {
+      redirectUrl.searchParams.set(key, value);
     }
 
-    console.log(`Redirecting from ${hostname}${pathname} to ${redirectUrl.toString()}`);
+    // Add returnToContribute parameter
+    redirectUrl.searchParams.set('returnToContribute', 'true');
+
+    console.log(`Redirecting from ${hostname}${pathname}${request.nextUrl.search} to ${redirectUrl.toString()}`);
 
     // Redirect to the main domain with the same path
     return NextResponse.redirect(redirectUrl);

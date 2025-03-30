@@ -20,44 +20,53 @@ function SignInContent() {
   const [returnToContribute, setReturnToContribute] = useState(false);
   const [redirectInProgress, setRedirectInProgress] = useState(false);
 
-  // Check if we're on an allowed domain
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-
-      // Check if we're on contribute subdomain
-      const isContributeSubdomain = hostname === 'contribute.ab2.observer';
-      if (isContributeSubdomain) {
-        setReturnToContribute(true);
-      }
-
-      // We're on a correct domain if it's the main domain (not the contribute subdomain)
-      const isMainDomain = hostname === 'ab2.observer';
-      setIsCorrectDomain(isMainDomain);
-
-      // For local development
-      if (process.env.NODE_ENV === 'development') {
-        setIsCorrectDomain(true);
-      }
-    }
-  }, []);
-
-  // Check URL parameters for returnToContribute flag
+  // Check URL parameters for returnToContribute flag - do this first
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('returnToContribute') === 'true') {
+        console.log("Setting returnToContribute to true from URL parameter");
         setReturnToContribute(true);
       }
     }
   }, []);
 
+  // Check if we're on an allowed domain - do this second
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      console.log("Current hostname:", hostname);
+
+      // Check if we're on contribute subdomain
+      const isContributeSubdomain = hostname === 'contribute.ab2.observer';
+
+      // We're on a correct domain if it's the main domain
+      const isMainDomain = hostname === 'ab2.observer';
+      setIsCorrectDomain(isMainDomain);
+
+      // For development, always handle as normal
+      if (process.env.NODE_ENV === 'development') {
+        console.log("In development mode, treating as correct domain");
+        setIsCorrectDomain(true);
+      }
+
+      // Only set returnToContribute from hostname if not already set from URL parameter
+      if (isContributeSubdomain && !returnToContribute) {
+        console.log("Setting returnToContribute to true from hostname");
+        setReturnToContribute(true);
+      }
+    }
+  }, [returnToContribute]);
+
+  // Handle authenticated user redirect
   useEffect(() => {
     // If the user is already signed in, redirect to the appropriate domain
     if (status === "authenticated" && session?.user?.address && !redirectInProgress) {
+      console.log("User is authenticated, redirecting");
       setRedirectInProgress(true); // Prevent multiple redirects
 
       if (returnToContribute) {
+        console.log("Redirecting to contribute subdomain");
         // Redirect to contribute subdomain
         if (process.env.NODE_ENV === 'development') {
           router.push("/contribute");
@@ -65,27 +74,38 @@ function SignInContent() {
           window.location.href = "https://contribute.ab2.observer";
         }
       } else {
+        console.log("Redirecting to main domain contribute page");
         // Redirect to contribute page on main domain
         router.push("/contribute");
       }
     }
   }, [session, status, router, returnToContribute, redirectInProgress]);
 
-  // Redirect to the main domain if we're not on it already
+  // Redirect to the main domain if needed
   useEffect(() => {
-    if (!isCorrectDomain && typeof window !== 'undefined' && !redirectInProgress) {
+    // Only redirect if:
+    // 1. We're not on the correct domain
+    // 2. A redirect is not already in progress
+    // 3. We're not already handling a returnToContribute parameter
+    if (!isCorrectDomain &&
+      !redirectInProgress &&
+      typeof window !== 'undefined' &&
+      !window.location.search.includes('returnToContribute=true')) {
+
+      console.log("Need to redirect to main domain");
       setRedirectInProgress(true); // Prevent multiple redirects
 
       const currentPath = window.location.pathname;
       const queryParams = window.location.search;
-      // Add a parameter to remember that we need to redirect back to the contribute subdomain
-      const redirectParam = returnToContribute ? '&returnToContribute=true' : '';
-      const redirectUrl = `https://ab2.observer${currentPath}${queryParams}${queryParams ? redirectParam : '?returnToContribute=true'}`;
+
+      // Properly format the URL with the returnToContribute parameter
+      const separator = queryParams ? '&' : '?';
+      const redirectUrl = `https://ab2.observer${currentPath}${queryParams}${separator}returnToContribute=true`;
 
       console.log("Redirecting to main domain:", redirectUrl);
       window.location.href = redirectUrl;
     }
-  }, [isCorrectDomain, returnToContribute, redirectInProgress]);
+  }, [isCorrectDomain, redirectInProgress]);
 
   const handleSignIn = async () => {
     try {
@@ -154,9 +174,11 @@ function SignInContent() {
 
       // Prevent redirect loop by setting a flag
       setRedirectInProgress(true);
+      console.log("Authentication successful, preparing to redirect");
 
       // Redirect after successful sign-in based on origin
       if (returnToContribute) {
+        console.log("Redirecting to contribute subdomain after successful sign-in");
         // For development, use router
         if (process.env.NODE_ENV === 'development') {
           router.push("/contribute");
@@ -165,6 +187,7 @@ function SignInContent() {
           window.location.href = "https://contribute.ab2.observer";
         }
       } else {
+        console.log("Redirecting to main domain contribute page after successful sign-in");
         // Standard redirect to main domain's contribute page
         router.push("/contribute");
       }

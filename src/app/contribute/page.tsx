@@ -10,39 +10,59 @@ export default function ContributePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isContributeSubdomain, setIsContributeSubdomain] = useState(false);
+  const [redirectInProgress, setRedirectInProgress] = useState(false);
+
+  // Debug state and detection
+  useEffect(() => {
+    console.log("Contribute page - session status:", status);
+    console.log("Contribute page - has session:", session !== null);
+  }, [status, session]);
 
   // Check if we're on the contribute subdomain
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
-      setIsContributeSubdomain(hostname === 'contribute.ab2.observer');
+      console.log("Contribute page - hostname:", hostname);
+
+      const subdomain = hostname === 'contribute.ab2.observer';
+      setIsContributeSubdomain(subdomain);
 
       // For development, always handle as normal
       if (process.env.NODE_ENV === 'development') {
+        console.log("Contribute page - dev mode, treating as main domain");
         setIsContributeSubdomain(false);
       }
     }
   }, []);
 
+  // Handle authentication status
   useEffect(() => {
-    // Break the redirect loop - only redirect if we're not loading
-    // and the status is definitively unauthenticated
+    // Don't redirect if we're already in the process of redirecting
+    if (redirectInProgress) {
+      return;
+    }
+
+    // Only redirect if we have a definitive status - either authenticated or unauthenticated
     if (status === "unauthenticated") {
+      console.log("Contribute page - user is unauthenticated, need to redirect to signin");
+      setRedirectInProgress(true);
+
       // If on contribute subdomain, redirect to sign-in with return flag
       if (isContributeSubdomain) {
+        console.log("Contribute page - redirecting to main domain signin with returnToContribute");
         window.location.href = "https://ab2.observer/auth/signin?returnToContribute=true";
       } else {
         // Standard redirect to sign-in
+        console.log("Contribute page - redirecting to signin on same domain");
         router.replace("/auth/signin");
       }
-    } else if (status === "authenticated") {
+    } else if (status === "authenticated" && session) {
+      console.log("Contribute page - user is authenticated, showing content");
       // User is authenticated, we can show the content
       setLoading(false);
-    } else if (status === "loading" && session === null) {
-      // Status is still loading but no session yet
-      // Keep the loading state active
     }
-  }, [status, router, isContributeSubdomain, session]);
+    // If status is still "loading", we maintain the loading state
+  }, [status, router, isContributeSubdomain, session, redirectInProgress]);
 
   const handleSignOut = async () => {
     // If on contribute subdomain, sign out to main domain
@@ -86,13 +106,13 @@ export default function ContributePage() {
             <h2>Contribution Actions</h2>
             <div className="button-group">
               <Link
-                href={isContributeSubdomain ? "https://contribute.ab2.observer/my-contributions" : "/contribute/my-contributions"}
+                href={isContributeSubdomain ? "https://contribute.ab2.observer/contribute/my-contributions" : "/contribute/my-contributions"}
                 className="action-button"
               >
                 View My Contributions
               </Link>
               <Link
-                href={isContributeSubdomain ? "https://contribute.ab2.observer/new" : "/contribute/new"}
+                href={isContributeSubdomain ? "https://contribute.ab2.observer/contribute/new" : "/contribute/new"}
                 className="action-button"
               >
                 Create New Contribution
