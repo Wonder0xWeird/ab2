@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from '@/providers/AuthProvider'
 import WalletProvider from '@/providers/WalletProvider'
+import AuthHeader from '@/components/AuthHeader'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
         <AuthProvider>
           <WalletProvider>
             <div id="background-pattern" />
+            <AuthHeader />
             <main>
               {children}
             </main>
