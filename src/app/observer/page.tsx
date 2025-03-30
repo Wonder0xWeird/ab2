@@ -64,6 +64,15 @@ function PageCard({ page }: { page: PageInfo }) {
     );
   }
 
+  // For external links, use an <a> tag instead of Next.js Link
+  if (page.isExternal) {
+    return (
+      <a href={page.path} className="expression-card" target={page.path.startsWith('http') ? "_blank" : "_self"} rel="noopener noreferrer">
+        <CardContent />
+      </a>
+    );
+  }
+
   return (
     <Link href={page.path} className="expression-card">
       <CardContent />
@@ -90,14 +99,14 @@ async function getAvailablePages(): Promise<PageInfo[]> {
 
     // Process each directory
     for (const dir of directories) {
-      // Skip special directories like api
-      if (dir.name === 'api' || dir.name.startsWith('_')) {
+      // Skip special directories like api, auth, and observer itself
+      if (dir.name === 'api' || dir.name === 'auth' || dir.name.startsWith('_') || dir.name === 'observer') {
         continue;
       }
 
-      // Process based on directory name
+      // Special handling for specific directories
       if (dir.name === 'muse') {
-        // Special handling for MUSE - uses a different URL in production
+        // MUSE - uses a different URL in production
         const museUrl = isDevelopment ? '/muse' : 'https://muse.ab2.observer';
         pages.push({
           name: 'muse',
@@ -108,9 +117,18 @@ async function getAvailablePages(): Promise<PageInfo[]> {
           titleLetter: 'M',
           tagline: 'Hmmm...'
         });
-      } else if (dir.name === 'observer') {
-        // Skip observer itself to avoid circular navigation
-        continue;
+      } else if (dir.name === 'dashboard') {
+        // Rename dashboard to contribute and change URL
+        const contributeUrl = isDevelopment ? '/dashboard' : 'https://contribute.ab2.observer';
+        pages.push({
+          name: 'contribute',
+          path: contributeUrl,
+          title: 'Contribute',
+          description: 'Contribute to ABSTRACTU',
+          isExternal: !isDevelopment,
+          titleLetter: 'C',
+          tagline: 'Add your abstraction'
+        });
       } else {
         // Add other directories as pages
         const pageName = dir.name;
@@ -126,12 +144,14 @@ async function getAvailablePages(): Promise<PageInfo[]> {
       }
     }
 
-    // Add the home page
+    // Add the home page (with external link to main domain)
+    const homeUrl = isDevelopment ? '/' : 'https://ab2.observer';
     pages.push({
       name: 'home',
-      path: '/',
+      path: homeUrl,
       title: 'HOME',
       description: 'Main page',
+      isExternal: !isDevelopment,
       titleLetter: 'A',
       tagline: 'Abstraction to abstraction, Ab2 is.'
     });
