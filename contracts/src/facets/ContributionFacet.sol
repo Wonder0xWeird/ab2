@@ -17,7 +17,8 @@ contract ContributionFacet {
     uint8 constant STATUS_INITIALIZED = 1;
     uint8 constant STATUS_ACCEPTED = 2;
     uint8 constant STATUS_REJECTED = 3;
-    // Future statuses can be added (4, 5, etc.) without breaking existing logic
+    uint8 constant STATUS_ARCHIVED = 4;
+    // Future statuses can be added (5, 6, etc.) without breaking existing logic
 
     /**
      * @dev Contribution structure
@@ -32,6 +33,12 @@ contract ContributionFacet {
         uint256 evaluationScore; // Score assigned during evaluation (0-100)
         uint256 timestamp; // Time of last status change
         uint16 version; // Version of the contribution structure
+        // Additional fields for archived contributions
+        string originalAuthor; // Original author for archived works
+        uint256 originalYear; // Year of original publication
+        string originalSource; // Original publication source
+        string historicalContext; // Additional historical context
+        bool isArchived; // Flag to easily identify archived contributions
     }
 
     /**
@@ -48,9 +55,12 @@ contract ContributionFacet {
         uint256 totalContributions;
         // Total count of accepted contributions
         uint256 acceptedContributions;
+        // Total count of archived contributions
+        uint256 archivedContributions;
         // Configuration parameters
         uint256 acceptanceThreshold; // Minimum score for acceptance (default 88)
         uint256 blacklistThreshold; // Maximum score for blacklisting (default 12)
+        uint256 archivalAcceptanceThreshold; // Minimum score for archival acceptance (default 75)
         // Facet version for future migrations
         uint16 facetVersion;
     }
@@ -103,9 +113,33 @@ contract ContributionFacet {
         uint256 timestamp
     );
 
+    event ContributionArchiveInitialized(
+        uint256 indexed contributionId,
+        address indexed contributor,
+        string title,
+        string description,
+        string originalAuthor,
+        uint256 originalYear,
+        string originalSource,
+        string historicalContext,
+        uint256 timestamp
+    );
+
+    event ContributionArchiveAccepted(
+        uint256 indexed contributionId,
+        address indexed contributor,
+        string contentHash,
+        string title,
+        string originalAuthor,
+        uint256 originalYear,
+        uint256 evaluationScore,
+        uint256 timestamp
+    );
+
     event ConfigurationUpdated(
         uint256 acceptanceThreshold,
         uint256 blacklistThreshold,
+        uint256 archivalAcceptanceThreshold,
         uint256 timestamp
     );
 
@@ -148,11 +182,13 @@ contract ContributionFacet {
             cs.blacklistThreshold = _blacklistThreshold > 0
                 ? _blacklistThreshold
                 : 12;
+            cs.archivalAcceptanceThreshold = 75; // Default archival threshold
             cs.facetVersion = 1; // Set initial version
 
             emit ConfigurationUpdated(
                 cs.acceptanceThreshold,
                 cs.blacklistThreshold,
+                cs.archivalAcceptanceThreshold,
                 block.timestamp
             );
         }
@@ -162,10 +198,12 @@ contract ContributionFacet {
      * @notice Update configuration parameters
      * @param _acceptanceThreshold New minimum score for acceptance
      * @param _blacklistThreshold New maximum score for blacklisting
+     * @param _archivalAcceptanceThreshold New minimum score for archival acceptance
      */
     function updateConfiguration(
         uint256 _acceptanceThreshold,
-        uint256 _blacklistThreshold
+        uint256 _blacklistThreshold,
+        uint256 _archivalAcceptanceThreshold
     ) external onlyACRONTU {
         require(
             _acceptanceThreshold > 0 && _acceptanceThreshold <= 100,
@@ -175,14 +213,21 @@ contract ContributionFacet {
             _blacklistThreshold < _acceptanceThreshold,
             "ContributionFacet: Blacklist threshold must be less than acceptance threshold"
         );
+        require(
+            _archivalAcceptanceThreshold > 0 &&
+                _archivalAcceptanceThreshold <= 100,
+            "ContributionFacet: Invalid archival acceptance threshold"
+        );
 
         ContributionStorage storage cs = contributionStorage();
         cs.acceptanceThreshold = _acceptanceThreshold;
         cs.blacklistThreshold = _blacklistThreshold;
+        cs.archivalAcceptanceThreshold = _archivalAcceptanceThreshold;
 
         emit ConfigurationUpdated(
             _acceptanceThreshold,
             _blacklistThreshold,
+            _archivalAcceptanceThreshold,
             block.timestamp
         );
     }
@@ -223,6 +268,7 @@ contract ContributionFacet {
         newContribution.status = STATUS_INITIALIZED;
         newContribution.timestamp = block.timestamp;
         newContribution.version = 1; // Set initial version
+        newContribution.isArchived = false; // Not an archived contribution
 
         // Add to contributor's contributions
         cs.contributorContributions[msg.sender].push(newContributionId);
@@ -241,6 +287,89 @@ contract ContributionFacet {
     }
 
     /**
+     * @notice Initialize a new archived contribution, called by the archiver
+     * @param _title Title of the contribution
+     * @param _description Brief description of the contribution
+     * @param _originalAuthor Name of the original author
+     * @param _originalYear Year of original publication
+     * @param _originalSource Source of the original publication
+     * @param _historicalContext Additional historical context
+     * @return contributionId The ID of the initialized archived contribution
+     */
+    function initializeArchiveContribution(
+        string calldata _title,
+        string calldata _description,
+        string calldata _originalAuthor,
+        uint256 _originalYear,
+        string calldata _originalSource,
+        string calldata _historicalContext
+    ) external returns (uint256) {
+        require(
+            bytes(_title).length > 0,
+            "ContributionFacet: Title cannot be empty"
+        );
+        require(
+            bytes(_description).length > 0,
+            "ContributionFacet: Description cannot be empty"
+        );
+        require(
+            bytes(_originalAuthor).length > 0,
+            "ContributionFacet: Original author cannot be empty"
+        );
+        require(
+            _originalYear > 0 &&
+                _originalYear <= block.timestamp / 365 days + 1970,
+            "ContributionFacet: Invalid original year"
+        );
+        require(
+            bytes(_originalSource).length > 0,
+            "ContributionFacet: Original source cannot be empty"
+        );
+
+        ContributionStorage storage cs = contributionStorage();
+
+        // Increment contribution counter
+        cs.contributionCounter++;
+        uint256 newContributionId = cs.contributionCounter;
+
+        // Create new archived contribution record
+        Contribution storage newContribution = cs.contributions[
+            newContributionId
+        ];
+        newContribution.id = newContributionId;
+        newContribution.contributor = msg.sender;
+        newContribution.title = _title;
+        newContribution.description = _description;
+        newContribution.status = STATUS_INITIALIZED;
+        newContribution.timestamp = block.timestamp;
+        newContribution.version = 1; // Set initial version
+        newContribution.originalAuthor = _originalAuthor;
+        newContribution.originalYear = _originalYear;
+        newContribution.originalSource = _originalSource;
+        newContribution.historicalContext = _historicalContext;
+        newContribution.isArchived = true; // Mark as an archived contribution
+
+        // Add to contributor's contributions
+        cs.contributorContributions[msg.sender].push(newContributionId);
+        cs.totalContributions++;
+
+        // Emit event with all relevant data
+        emit ContributionArchiveInitialized(
+            newContributionId,
+            msg.sender,
+            _title,
+            _description,
+            _originalAuthor,
+            _originalYear,
+            _originalSource,
+            _historicalContext,
+            block.timestamp
+        );
+
+        return newContributionId;
+    }
+
+    /**
      * @notice Accept a contribution after ACRONTU evaluation
      * @param _contributionId ID of the contribution to accept
      * @param _contentHash Filecoin CID of the encrypted content
@@ -252,18 +381,29 @@ contract ContributionFacet {
         uint256 _evaluationScore
     ) external contributionExists(_contributionId) onlyACRONTU {
         ContributionStorage storage cs = contributionStorage();
+        Contribution storage contribution = cs.contributions[_contributionId];
 
-        require(
-            _evaluationScore >= cs.acceptanceThreshold &&
-                _evaluationScore <= 100,
-            "ContributionFacet: Score must be above acceptance threshold"
-        );
+        // Check if this is a regular contribution or an archived one
+        if (!contribution.isArchived) {
+            // Regular contribution
+            require(
+                _evaluationScore >= cs.acceptanceThreshold &&
+                    _evaluationScore <= 100,
+                "ContributionFacet: Score must be above acceptance threshold"
+            );
+        } else {
+            // Archived contribution
+            require(
+                _evaluationScore >= cs.archivalAcceptanceThreshold &&
+                    _evaluationScore <= 100,
+                "ContributionFacet: Score must be above archival acceptance threshold"
+            );
+        }
+
         require(
             bytes(_contentHash).length > 0,
             "ContributionFacet: Content hash cannot be empty"
         );
-
-        Contribution storage contribution = cs.contributions[_contributionId];
 
         // Verify contribution is in the initialized state
         require(
@@ -272,22 +412,44 @@ contract ContributionFacet {
         );
 
         // Update contribution
-        contribution.status = STATUS_ACCEPTED;
-        contribution.evaluationScore = _evaluationScore;
-        contribution.contentHash = _contentHash;
-        contribution.timestamp = block.timestamp;
-        cs.acceptedContributions++;
+        if (!contribution.isArchived) {
+            // Regular contribution
+            contribution.status = STATUS_ACCEPTED;
+            contribution.evaluationScore = _evaluationScore;
+            contribution.contentHash = _contentHash;
+            contribution.timestamp = block.timestamp;
+            cs.acceptedContributions++;
 
-        // Emit event with all contribution data
-        emit ContributionAccepted(
-            _contributionId,
-            contribution.contributor,
-            _contentHash,
-            contribution.title,
-            contribution.description,
-            _evaluationScore,
-            block.timestamp
-        );
+            // Emit event with all contribution data
+            emit ContributionAccepted(
+                _contributionId,
+                contribution.contributor,
+                _contentHash,
+                contribution.title,
+                contribution.description,
+                _evaluationScore,
+                block.timestamp
+            );
+        } else {
+            // Archived contribution
+            contribution.status = STATUS_ARCHIVED;
+            contribution.evaluationScore = _evaluationScore;
+            contribution.contentHash = _contentHash;
+            contribution.timestamp = block.timestamp;
+            cs.archivedContributions++;
+
+            // Emit event with all archived contribution data
+            emit ContributionArchiveAccepted(
+                _contributionId,
+                contribution.contributor,
+                _contentHash,
+                contribution.title,
+                contribution.originalAuthor,
+                contribution.originalYear,
+                _evaluationScore,
+                block.timestamp
+            );
+        }
     }
 
     /**
@@ -300,13 +462,22 @@ contract ContributionFacet {
         uint256 _evaluationScore
     ) external contributionExists(_contributionId) onlyACRONTU {
         ContributionStorage storage cs = contributionStorage();
-
-        require(
-            _evaluationScore < cs.acceptanceThreshold,
-            "ContributionFacet: Score must be below acceptance threshold for rejection"
-        );
-
         Contribution storage contribution = cs.contributions[_contributionId];
+
+        // Check if this is a regular contribution or an archived one
+        if (!contribution.isArchived) {
+            // Regular contribution
+            require(
+                _evaluationScore < cs.acceptanceThreshold,
+                "ContributionFacet: Score must be below acceptance threshold for rejection"
+            );
+        } else {
+            // Archived contribution
+            require(
+                _evaluationScore < cs.archivalAcceptanceThreshold,
+                "ContributionFacet: Score must be below archival acceptance threshold for rejection"
+            );
+        }
 
         // Verify contribution is in the initialized state
         require(
@@ -340,6 +511,11 @@ contract ContributionFacet {
      * @return evaluationScore Evaluation score
      * @return timestamp Time of last status change
      * @return version Version of the contribution structure
+     * @return isArchived Whether this is an archived contribution
+     * @return originalAuthor Original author (for archived contributions)
+     * @return originalYear Year of original publication (for archived contributions)
+     * @return originalSource Original source (for archived contributions)
+     * @return historicalContext Historical context (for archived contributions)
      */
     function getContribution(
         uint256 _contributionId
@@ -356,7 +532,12 @@ contract ContributionFacet {
             uint8 status,
             uint256 evaluationScore,
             uint256 timestamp,
-            uint16 version
+            uint16 version,
+            bool isArchived,
+            string memory originalAuthor,
+            uint256 originalYear,
+            string memory originalSource,
+            string memory historicalContext
         )
     {
         ContributionStorage storage cs = contributionStorage();
@@ -371,7 +552,12 @@ contract ContributionFacet {
             contribution.status,
             contribution.evaluationScore,
             contribution.timestamp,
-            contribution.version
+            contribution.version,
+            contribution.isArchived,
+            contribution.originalAuthor,
+            contribution.originalYear,
+            contribution.originalSource,
+            contribution.historicalContext
         );
     }
 
@@ -379,6 +565,7 @@ contract ContributionFacet {
      * @notice Get contribution configuration values
      * @return acceptanceThreshold Minimum score for acceptance
      * @return blacklistThreshold Maximum score for blacklisting
+     * @return archivalAcceptanceThreshold Minimum score for archival acceptance
      * @return facetVersion Current version of this facet
      */
     function getConfiguration()
@@ -387,11 +574,17 @@ contract ContributionFacet {
         returns (
             uint256 acceptanceThreshold,
             uint256 blacklistThreshold,
+            uint256 archivalAcceptanceThreshold,
             uint16 facetVersion
         )
     {
         ContributionStorage storage cs = contributionStorage();
-        return (cs.acceptanceThreshold, cs.blacklistThreshold, cs.facetVersion);
+        return (
+            cs.acceptanceThreshold,
+            cs.blacklistThreshold,
+            cs.archivalAcceptanceThreshold,
+            cs.facetVersion
+        );
     }
 
     /**
@@ -425,6 +618,15 @@ contract ContributionFacet {
     }
 
     /**
+     * @notice Get count of archived contributions
+     * @return Count of archived contributions
+     */
+    function getArchivedContributions() external view returns (uint256) {
+        ContributionStorage storage cs = contributionStorage();
+        return cs.archivedContributions;
+    }
+
+    /**
      * @notice Helper function to check if a score meets the acceptance threshold
      * @param _score The evaluation score to check
      * @return True if the score meets or exceeds the acceptance threshold
@@ -446,5 +648,17 @@ contract ContributionFacet {
     ) external view returns (bool) {
         ContributionStorage storage cs = contributionStorage();
         return _score <= cs.blacklistThreshold;
+    }
+
+    /**
+     * @notice Helper function to check if a score meets the archival acceptance threshold
+     * @param _score The evaluation score to check
+     * @return True if the score meets or exceeds the archival acceptance threshold
+     */
+    function meetsArchivalAcceptanceThreshold(
+        uint256 _score
+    ) external view returns (bool) {
+        ContributionStorage storage cs = contributionStorage();
+        return _score >= cs.archivalAcceptanceThreshold;
     }
 }
