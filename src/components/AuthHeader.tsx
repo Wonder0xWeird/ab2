@@ -18,11 +18,13 @@ export default function AuthHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [ensName, setEnsName] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState<string>('');
+  const [currentFullUrl, setCurrentFullUrl] = useState<string>('');
 
-  // Get current path on client side
+  // Get current path and full URL on client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCurrentPath(window.location.pathname + window.location.search);
+      setCurrentFullUrl(window.location.href);
     }
   }, []);
 
@@ -64,7 +66,16 @@ export default function AuthHeader() {
         return "https://ab2.observer/auth/signin?returnToContribute=true";
       }
 
-      // For main domain or local development, include the callbackUrl to return to current page
+      // Check if we're on a subdomain other than contribute
+      const isSubdomain = hostname.includes('.ab2.observer') && hostname !== 'ab2.observer';
+
+      if (isSubdomain) {
+        // For other subdomains, we need to create a full URL to return to
+        const callbackUrl = encodeURIComponent(currentFullUrl);
+        return `https://ab2.observer/auth/signin?callbackUrl=${callbackUrl}`;
+      }
+
+      // For main domain, include the callbackUrl to return to current page
       const callbackUrl = encodeURIComponent(currentPath || '/');
       return `/auth/signin?callbackUrl=${callbackUrl}`;
     }
@@ -82,8 +93,8 @@ export default function AuthHeader() {
       // On contribute subdomain, redirect to main domain
       await signOut({ callbackUrl: "https://ab2.observer" });
     } else {
-      // On main domain, redirect to current page
-      await signOut({ callbackUrl: currentPath || '/' });
+      // On main domain or other subdomains, redirect to current page
+      await signOut({ callbackUrl: currentFullUrl || '/' });
     }
   };
 

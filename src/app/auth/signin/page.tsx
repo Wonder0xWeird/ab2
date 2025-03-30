@@ -83,7 +83,16 @@ function SignInContent() {
         // If callbackUrl exists, redirect to it
         else if (callbackUrl) {
           console.log("Redirecting to callback URL:", callbackUrl);
-          router.push(decodeURIComponent(callbackUrl));
+          const decodedUrl = decodeURIComponent(callbackUrl);
+
+          // Check if the callback URL is a full URL (contains http/https)
+          if (decodedUrl.startsWith('http')) {
+            // For full URLs (like subdomain URLs), use window.location
+            window.location.href = decodedUrl;
+          } else {
+            // For relative paths on the same domain, use router
+            router.push(decodedUrl);
+          }
         }
         // Default fallback to contribute page on main domain
         else {
@@ -207,7 +216,16 @@ function SignInContent() {
       // If callbackUrl exists, redirect to it
       else if (callbackUrl) {
         console.log("Redirecting to callback URL after successful sign-in:", callbackUrl);
-        router.push(decodeURIComponent(callbackUrl));
+        const decodedUrl = decodeURIComponent(callbackUrl);
+
+        // Check if the callback URL is a full URL (contains http/https)
+        if (decodedUrl.startsWith('http')) {
+          // For full URLs (like subdomain URLs), use window.location
+          window.location.href = decodedUrl;
+        } else {
+          // For relative paths on the same domain, use router
+          router.push(decodedUrl);
+        }
       }
       // Default fallback
       else {
