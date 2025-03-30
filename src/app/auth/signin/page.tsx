@@ -43,8 +43,8 @@ function SignInContent() {
 
       const { nonce, timestamp } = await nonceResponse.json();
 
-      // Get domain and origin only on client side
-      const domain = window.location.host;
+      // Get domain using NEXTAUTH_URL environment variable to ensure consistency with the server
+      const domain = window.location.hostname.split('.').slice(-2).join('.');
       const origin = window.location.origin;
 
       // Create the SIWE message with a simplified statement (fewer newlines)
@@ -64,6 +64,7 @@ function SignInContent() {
       // Format the message
       const signableMessage = message.prepareMessage();
       console.log("Signing message:", signableMessage); // Debugging
+      console.log("Domain used:", domain); // Debugging
 
       // Sign the message with the connected wallet
       const signature = await signMessageAsync({ message: signableMessage });

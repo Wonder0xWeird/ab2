@@ -68,9 +68,15 @@ export const authOptions: AuthOptions = {
           const siwe = new SiweMessage(JSON.parse(credentials.message));
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL || "http://localhost:3000");
 
+          // Extract just the hostname (e.g., "ab2.observer")
+          const domain = nextAuthUrl.hostname.split('.').slice(-2).join('.');
+
+          console.log("Expected domain:", domain);
+          console.log("Message domain:", siwe.domain);
+
           const result = await siwe.verify({
             signature: credentials.signature,
-            domain: nextAuthUrl.host,
+            domain: domain,
             nonce: await getCsrfToken({ req }),
           });
 
