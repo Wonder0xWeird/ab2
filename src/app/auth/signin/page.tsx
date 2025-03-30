@@ -17,16 +17,12 @@ function SignInContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCorrectDomain, setIsCorrectDomain] = useState(true);
-  const [originDomain, setOriginDomain] = useState<string | null>(null);
   const [returnToContribute, setReturnToContribute] = useState(false);
 
   // Check if we're on an allowed domain
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
-
-      // Save the original domain to know where to return the user
-      setOriginDomain(hostname);
 
       // Check if we're on contribute subdomain
       const isContributeSubdomain = hostname === 'contribute.ab2.observer';
