@@ -1,85 +1,53 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useState, useEffect } from "react";
+import Link from "next/link";
 
-type AuthStatusProps = {
-  className?: string;
-};
+/**
+ * Displays the user's authentication status
+ */
+export default function AuthStatus() {
+  const { data: session } = useSession();
 
-export default function AuthStatus({ className = "" }: AuthStatusProps) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleDashboardClick = () => {
-    router.push("/dashboard");
+  // Determine the login URL - always use the main domain
+  const getLoginUrl = () => {
+    // If we're on the main domain, just use relative path
+    if (typeof window !== 'undefined' && window.location.hostname === 'ab2.observer') {
+      return "/auth/signin";
+    }
+    // Otherwise, use the absolute URL to the main domain
+    return "https://ab2.observer/auth/signin";
   };
 
-  // Don't render wallet components before client-side hydration is complete
-  if (!mounted) {
-    return <div className={`auth-status ${className}`}></div>;
-  }
-
   return (
-    <div className={`auth-status ${className}`}>
-      {status === "authenticated" && session?.user ? (
-        <div className="authenticated">
-          <span className="address-display">
-            {session.user.address?.substring(0, 6)}...{session.user.address?.substring(38)}
-          </span>
-          <button className="dashboard-button" onClick={handleDashboardClick}>
-            Dashboard
-          </button>
-        </div>
+    <div>
+      {session?.user ? (
+        <span>
+          Signed in as {session.user.name}
+        </span>
       ) : (
-        <div className="unauthenticated">
-          <ConnectButton
-            showBalance={false}
-          />
-        </div>
+        <Link href={getLoginUrl()} className="login-link">
+          Sign In
+        </Link>
       )}
 
       <style jsx>{`
-        .auth-status {
+        div {
           display: flex;
           align-items: center;
-          justify-content: center;
         }
-
-        .authenticated {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
+        span {
+          font-size: 0.875rem;
+          font-weight: 500;
         }
-
-        .address-display {
-          background-color: rgba(0, 0, 0, 0.3);
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          font-family: monospace;
-          font-size: 0.9rem;
+        .login-link {
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-decoration: none;
+          color: #FFD700;
         }
-
-        .dashboard-button {
-          background-color: #FFD700;
-          color: #000;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .dashboard-button:hover {
-          background-color: #E6C200;
+        .login-link:hover {
+          text-decoration: underline;
         }
       `}</style>
     </div>

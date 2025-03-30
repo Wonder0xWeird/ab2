@@ -5,6 +5,9 @@ import { SiweMessage } from "siwe";
 import { MongoDBClient, Nonce } from '@/utils/mongodb';
 import { generateAuthToken } from "./middleware";
 
+// Define the main domain as a constant to ensure consistency
+const MAIN_DOMAIN = 'ab2.observer';
+
 /**
  * NextAuth configuration for Sign-In with Ethereum
  */
@@ -66,10 +69,9 @@ export const authOptions: AuthOptions = {
 
           // Parse and verify the SIWE message
           const siwe = new SiweMessage(JSON.parse(credentials.message));
-          const nextAuthUrl = new URL(process.env.NEXTAUTH_URL || "http://localhost:3000");
 
-          // Extract just the hostname (e.g., "ab2.observer")
-          const domain = nextAuthUrl.hostname.split('.').slice(-2).join('.');
+          // Always use our main domain for verification
+          const domain = MAIN_DOMAIN;
 
           console.log("Expected domain:", domain);
           console.log("Message domain:", siwe.domain);

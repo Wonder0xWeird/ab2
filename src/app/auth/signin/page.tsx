@@ -16,6 +16,16 @@ function SignInContent() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCorrectDomain, setIsCorrectDomain] = useState(true);
+
+  // Check if we're on the correct domain
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      // Make sure we're on the exact main domain
+      setIsCorrectDomain(hostname === 'ab2.observer');
+    }
+  }, []);
 
   useEffect(() => {
     // If the user is already signed in, redirect to dashboard
@@ -24,10 +34,24 @@ function SignInContent() {
     }
   }, [session, status, router]);
 
+  // Redirect to the main domain if we're not on it already
+  useEffect(() => {
+    if (!isCorrectDomain && typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      const queryParams = window.location.search;
+      window.location.href = `https://ab2.observer${currentPath}${queryParams}`;
+    }
+  }, [isCorrectDomain]);
+
   const handleSignIn = async () => {
     try {
       setLoading(true);
       setError(null);
+
+      // Safety check - only proceed if we're on the correct domain
+      if (!isCorrectDomain) {
+        throw new Error("Please sign in from the main domain");
+      }
 
       // Get the CSRF token
       const csrfToken = await getCsrfToken();
@@ -43,9 +67,9 @@ function SignInContent() {
 
       const { nonce, timestamp } = await nonceResponse.json();
 
-      // Get domain using NEXTAUTH_URL environment variable to ensure consistency with the server
-      const domain = window.location.hostname.split('.').slice(-2).join('.');
-      const origin = window.location.origin;
+      // Always use the main domain for SIWE
+      const domain = 'ab2.observer';
+      const origin = 'https://ab2.observer';
 
       // Create the SIWE message with a simplified statement (fewer newlines)
       const message = new SiweMessage({
@@ -96,6 +120,41 @@ function SignInContent() {
       setLoading(false);
     }
   };
+
+  // Don't render the form if we're not on the correct domain - it will redirect
+  if (!isCorrectDomain) {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>Redirecting to secure sign-in...</h1>
+        </div>
+        <style jsx>{`
+          .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+          }
+          
+          .auth-card {
+            background-color: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+          }
+          
+          h1 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">
