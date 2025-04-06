@@ -7,7 +7,6 @@ import {
   Sentence, ISentence,
   UserRole
 } from '@/utils/mongodb/models';
-import { MarkdownType } from '@/utils/mongodb/schemas/sentence.schema';
 import mongoose, { ClientSession, Document } from 'mongoose';
 import { parseMarkdownToSentences, ParsedSentence } from '@/utils/parsing/markdownParser';
 

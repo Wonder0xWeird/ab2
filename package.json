@@ -52,6 +52,6 @@
     "pino-pretty": "^13.0.0",
     "postcss-import": "^16.1.0",
     "typescript": "^5",
-    "typescript-eslint": "^7.10.0"
+    "typescript-eslint": "^8.0.0"
   }
 }

@@ -1,21 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import "@uiw/react-md-editor/markdown-editor.css";
-import { IConcept } from '@/utils/mongodb/models'; // Assuming this type might be useful
+import { IDraft } from '@/utils/mongodb/models';
 
 // Dynamically import the Markdown editor
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor"),
   { ssr: false }
 );
-
-interface ConceptInfo {
-  cid: string;
-  title: string;
-}
 
 interface ConceptDraftFormProps {
   cid: string; // Receive cid as a prop

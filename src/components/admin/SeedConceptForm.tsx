@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import "@uiw/react-md-editor/markdown-editor.css";
-import { IConcept } from '@/utils/mongodb/models'; // Corrected import path
 
 // Dynamically import the Markdown editor to avoid SSR issues
 const MDEditor = dynamic(

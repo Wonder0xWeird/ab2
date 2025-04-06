@@ -1,44 +1,49 @@
-import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
-import { JWT, DefaultJWT } from "next-auth/jwt";
+import { Module } from 'module'; // Assuming this is the type for module
+import { DefaultSession, User as DefaultUser, Session, JWT as DefaultJWT } from 'next-auth';
+// Remove unused JWT import from \"next-auth/jwt\"
+// import { JWT } from \"next-auth/jwt\";
 import { UserRole } from "@/utils/mongodb"; // Import UserRole enum
 
-// Define your custom user role enum or type if you haven't already
-type UserRole = "superadmin" | "superuser" | "user"; // Match roles defined in authOptions
+// Define enum for User Roles if not already defined elsewhere
+// Ensure this matches the roles used in your User schema/model
+enum UserRole {
+  USER = 'user',
+  SUPERADMIN = 'superadmin',
+  SUPERUSER = 'superuser' // Add other roles as needed
+}
 
-declare module "next-auth" {
+declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
     user: {
-      /** The user's role. */
-      role: UserRole;
       /** The user's wallet address. */
       address: string;
-      /** Custom JWT token */
-      authToken?: string | null;
-    } & DefaultSession["user"]; // Keep the default properties like name, email, image
-    error?: string | undefined; // Keep error property if needed
+      /** The user's role. */
+      role: UserRole;
+    } & DefaultSession['user'] // Include default fields like name, email, image if needed
   }
 
-  /**
-   * The shape of the user object returned in the OAuth providers' `profile` callback,
-   * or the second parameter of the `session` callback, when using a database.
-   */
+  // Extends the default User type
   interface User extends DefaultUser {
     role: UserRole;
-    address: string; // Ensure address is part of the User type if you add it in authorize callback
-    authToken: string;
+    address: string; // Ensure address is part of the User type passed around
   }
 }
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
-    /** OpenID ID Token */
+    /** User role */
     role: UserRole;
+    /** Wallet address */
     address: string;
-    /** Custom JWT token */
-    authToken?: string | null;
+    /** Issued at */
+    iat?: number;
+    /** Expiration time */
+    exp?: number;
+    /** JWT ID */
+    jti?: string;
   }
 } 

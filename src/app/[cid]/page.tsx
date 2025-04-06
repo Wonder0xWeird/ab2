@@ -43,9 +43,13 @@ export default function ConceptPage() {
         } else {
           throw new Error(data.error || 'Invalid data received from API');
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(`Error fetching concept data for CID [${cid}]:`, err);
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred while fetching concept data.');
+        }
         // Potentially trigger notFound() here too, depending on desired behavior for errors
         // notFound(); 
       } finally {
