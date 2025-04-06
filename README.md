@@ -16,6 +16,8 @@ Visit the live site at [muse.ab2.observer](https://muse.ab2.observer)
 - Cohesive documentation interface with background pattern integration
 - Diamond Standard smart contracts for upgradeable blockchain integration
 - Contribution and evaluation system based on ergodic principles
+- Accurate parsing and rendering of complex Markdown, including nested lists with correct numbering and indentation.
+- Secure Sign-In with Ethereum (SIWE) authentication.
 
 ## Philosophical Foundations
 ABSTRACTU is guided by several key philosophical concepts:
@@ -108,10 +110,11 @@ The project implements a blockchain component using the Diamond Standard (EIP-25
 ## Contribution System Architecture
 ABSTRACTU implements a hybrid architecture for content contributions:
 
-1. **Draft Storage**: MongoDB database stores draft contributions during development
-2. **Evaluation**: ACRONTU system evaluates submissions using AI-based criteria
-3. **Permanent Storage**: Accepted contributions stored on Filecoin network
-4. **Blockchain Record**: Abstract blockchain records metadata, status, and Filecoin CIDs
+1. **Markdown Parsing**: Submitted content is processed by a custom Markdown parser (`src/utils/parsing/markdownParser.ts`) that accurately handles complex structures like nested lists, capturing detailed metadata (`itemNumber`, `ordered`, `indentation`) for rendering.
+2. **Draft Storage**: MongoDB database stores draft contributions during development.
+3. **Evaluation**: ACRONTU system evaluates submissions using AI-based criteria.
+4. **Permanent Storage**: Accepted contributions stored on Filecoin network.
+5. **Blockchain Record**: Abstract blockchain records metadata, status, and Filecoin CIDs.
 
 This system creates an efficient pipeline where only quality content receives permanent storage while maintaining a record of all contributions and their status.
 

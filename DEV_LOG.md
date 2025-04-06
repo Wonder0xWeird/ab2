@@ -317,9 +317,40 @@ ABSTRACTU (Ab2) is an AI-powered creative writing and blogging platform that ble
 - Established a clean architecture for future feature development
 
 ## Current Status
-With the authentication system now in place, ABSTRACTU has taken a significant step toward becoming a fully functional platform for contribution and collaboration. Users can securely authenticate using their Ethereum wallets through a process that prevents replay attacks and ensures message integrity. The architecture is designed to be both secure and developer-friendly, with proper error handling and development fallbacks. The UI components are now hydration-safe, ensuring a consistent experience across server and client rendering. The MongoDB integration provides a reliable storage solution for authentication data and lays the groundwork for the contribution system. The next steps involve implementing the contribution submission system that will allow users to create, edit, and submit content to the platform.
+With the authentication system now in place, ABSTRACTU has taken a significant step toward becoming a fully functional platform for contribution and collaboration. Users can securely authenticate using their Ethereum wallets through a process that prevents replay attacks and ensures message integrity. The architecture is designed to be both secure and developer-friendly, with proper error handling and development fallbacks. The UI components are now hydration-safe, ensuring a consistent experience across server and client rendering. The MongoDB integration provides a reliable storage solution for authentication data and lays the groundwork for the contribution system.
+
+The platform now features robust Markdown parsing and rendering capabilities, accurately handling complex nested lists and ensuring consistent presentation between initial content seeding and subsequent draft publications. The rendering logic correctly uses captured metadata for list numbering and indentation.
 
 The project has been enhanced with significant improvements to the documentation interface, creating a more cohesive visual experience across all sections. The documentation pages now feature proper background pattern tiling, transparent sidebar navigation, and optimized code structure. All navigation elements maintain full functionality while benefiting from enhanced styling. The platform is ready for deployment with these improvements in place, ensuring a consistent user experience throughout the ABSTRACTU ecosystem.
+
+### April 6th, 2025: Markdown Parser & Renderer Refinement (Lists)
+
+**Step 1: Debugging Nested List Parsing (v9-v14)**
+- Identified issues where nested unordered lists caused the parser to lose context for subsequent ordered list items (e.g., item 6 rendered as unordered).
+- Iteratively refined the `markdownParser.ts` logic using different `unist-util-visit` patterns (`enter`/`leave` objects, type-keyed objects, single visitor function with advanced stack management).
+- Encountered and worked through several `unist-util-visit` type definition complexities.
+- Focused on correctly managing the `listStack` to push context on entering lists and pop/correct context when exiting nested structures or encountering subsequent sibling list items.
+- Ensured correct calculation and storage of `metadata`: `ordered`, `indentation`, `start`, and `itemNumber`.
+
+**Step 2: Refining List Rendering (`SentenceRenderer.tsx`)**
+- Modified the `SentenceItem` component to handle `ListItem` types.
+- Initially attempted to use browser default numbering with `<ol start="...">`.
+- Identified that dynamic loading and component structure made default browser numbering unreliable.
+- Updated `SentenceItem` to manually prepend the `metadata.itemNumber` (e.g., "6. ") to the content for ordered list items.
+- Set `list-style-type: none` on ordered `<li>` elements to hide default browser markers.
+- Removed the `start` attribute from the `<ol>` wrapper in the main renderer's grouping logic.
+
+**Step 3: Verification & Consistency**
+- Confirmed successful parsing and rendering of complex nested lists with correct numbering and indentation.
+- Manually updated metadata for older seed records to align with the new parser output.
+- Verified that the same `parseMarkdownToSentences` function is used in both the initial concept seeding API (`/api/admin/concepts`) and the draft publishing API (`/api/admin/drafts/publish`), ensuring consistent processing.
+- Clarified the purpose of the `metadata.start` flag (captures list starting number from Markdown source, but not currently used for rendering).
+
+**Technical Achievements**
+- Developed a robust Markdown parser capable of handling complex nested ordered and unordered lists.
+- Implemented accurate metadata capture (`itemNumber`, `ordered`, `indentation`, `start`).
+- Created reliable list rendering logic that uses captured metadata directly, bypassing browser inconsistencies.
+- Ensured consistency between initial content seeding and subsequent draft publications.
 
 ## Technical Challenges
 
