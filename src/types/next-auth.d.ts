@@ -1,4 +1,9 @@
-import type { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
+import { JWT, DefaultJWT } from "next-auth/jwt";
+import { UserRole } from "@/utils/mongodb"; // Import UserRole enum
+
+// Define your custom user role enum or type if you haven't already
+type UserRole = "superadmin" | "superuser" | "user"; // Match roles defined in authOptions
 
 declare module "next-auth" {
   /**
@@ -6,23 +11,34 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
-      /** User's Ethereum wallet address */
-      address?: string;
-      /** Custom authorization token for API calls */
-      authToken?: string;
-    } & DefaultSession["user"];
+      /** The user's role. */
+      role: UserRole;
+      /** The user's wallet address. */
+      address: string;
+      /** Custom JWT token */
+      authToken?: string | null;
+    } & DefaultSession["user"]; // Keep the default properties like name, email, image
+    error?: string | undefined; // Keep error property if needed
   }
 
-  interface User {
-    address: string;
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
+  interface User extends DefaultUser {
+    role: UserRole;
+    address: string; // Ensure address is part of the User type if you add it in authorize callback
     authToken: string;
   }
 }
 
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-  interface JWT {
-    /** Custom authorization token for API calls */
-    authToken?: string;
+  interface JWT extends DefaultJWT {
+    /** OpenID ID Token */
+    role: UserRole;
+    address: string;
+    /** Custom JWT token */
+    authToken?: string | null;
   }
 } 

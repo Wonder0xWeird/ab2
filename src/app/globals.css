@@ -72,7 +72,7 @@ body {
   background-repeat: repeat;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.12;
+  /* opacity: 0.12; */
 }
 
 /* Layout utilities */
@@ -1423,4 +1423,313 @@ p {
   background: rgba(204, 156, 66, 0.25);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Added Form Styles --- */
+
+.form-container {
+  width: 100%;
+  max-width: 1200px;
+  /* Max width as requested */
+  margin: 2rem auto;
+  /* Center the form */
+  padding: 2rem;
+  background: rgba(20, 25, 33, 0.7);
+  /* Use a background color from the theme */
+  border-radius: 8px;
+  box-shadow: 0 3px 10px 5px var(--shadow);
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  /* Equivalent to space-y-6 */
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  /* text-sm */
+  font-weight: 500;
+  /* font-medium */
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+  /* Add some space below label */
+}
+
+.form-input,
+.form-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  /* px-3 py-2 */
+  background-color: rgba(20, 25, 33, 0.5);
+  /* Darker input background */
+  border: 1px solid rgba(204, 156, 66, 0.3);
+  /* Gold border */
+  color: var(--foreground);
+  border-radius: 0.375rem;
+  /* rounded-md */
+  box-shadow: inset 0 1px 2px var(--shadow);
+  /* Subtle inner shadow */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.875rem;
+  /* sm:text-sm */
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: inset 0 1px 2px var(--shadow), 0 0 0 2px rgba(204, 156, 66, 0.4);
+  /* Focus ring */
+}
+
+.form-textarea {
+  min-height: 80px;
+  /* Default height for textarea */
+}
+
+.form-hint {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  /* text-xs */
+  color: rgba(224, 224, 224, 0.6);
+  /* Lighter gray for hints */
+}
+
+.form-error {
+  font-size: 0.875rem;
+  /* text-sm */
+  color: var(--danger);
+  margin-bottom: 1rem;
+  /* Add space below error */
+}
+
+.form-success {
+  font-size: 0.875rem;
+  /* text-sm */
+  color: #4ade80;
+  /* Keep success green for visibility */
+  margin-bottom: 1rem;
+  /* Add space below success */
+}
+
+/* Ensure MDEditor fits within the theme */
+.w-md-editor {
+  background-color: rgba(20, 25, 33, 0.5) !important;
+  /* Override default */
+  border: 1px solid rgba(204, 156, 66, 0.3) !important;
+  border-radius: 0.375rem !important;
+  box-shadow: inset 0 1px 2px var(--shadow) !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: rgba(34, 40, 49, 0.6) !important;
+  /* Slightly different background for toolbar */
+  border-bottom: 1px solid rgba(204, 156, 66, 0.3) !important;
+}
+
+.w-md-editor-toolbar li button {
+  color: var(--foreground) !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  background-color: rgba(204, 156, 66, 0.2) !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-preview .wmde-markdown {
+  color: var(--foreground) !important;
+  background-color: transparent !important;
+}
+
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  color: var(--gold) !important;
+  border-bottom: none !important;
+  /* Remove default border */
+}
+
+.wmde-markdown blockquote {
+  color: #a0a0a0 !important;
+  background: rgba(204, 156, 66, 0.1) !important;
+  border-left: 3px solid var(--gold) !important;
+}
+
+.wmde-markdown code {
+  color: var(--gold) !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+}
+
+.wmde-markdown pre>code {
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+.wmde-markdown pre {
+  background: rgba(0, 0, 0, 0.2) !important;
+  padding: 1rem !important;
+  border-radius: 4px !important;
+}
+
+/* --- Concept Page Content Area Styles --- */
+
+.concept-content-area {
+  font-family: 'Crimson Text', Georgia, serif;
+  /* Or use --font-inter if preferred for body */
+  color: var(--foreground);
+  line-height: 1.8;
+  /* Match .blog-post p style */
+}
+
+.concept-content-area h1,
+.concept-content-area h2,
+.concept-content-area h3,
+.concept-content-area h4,
+.concept-content-area h5,
+.concept-content-area h6 {
+  font-family: 'Crimson Text', Georgia, serif;
+  /* Ensure headings use Crimson */
+  color: var(--gold);
+  margin-top: 2rem;
+  /* Adjust spacing as needed */
+  margin-bottom: 1rem;
+}
+
+.concept-content-area h1 {
+  font-size: 3rem;
+  /* Match .blog-post h1 */
+  text-align: left;
+  /* Override any potential center alignment from prose */
+}
+
+.concept-content-area h2 {
+  font-size: 1.75rem;
+}
+
+.concept-content-area h3 {
+  font-size: 1.5rem;
+}
+
+.concept-content-area p {
+  font-size: 1.125rem;
+  /* Match .blog-post p */
+  margin-bottom: 1rem;
+  /* Standard paragraph spacing */
+  text-align: justify;
+  /* Match .blog-post p */
+}
+
+.concept-content-area pre {
+  background: rgba(26, 26, 26, 0.7);
+  /* Similar to .docs-page pre */
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border-left: 3px solid var(--gold);
+}
+
+.concept-content-area code {
+  font-family: monospace;
+  color: var(--foreground);
+  /* Default code color */
+}
+
+/* Inline code */
+.concept-content-area :not(pre)>code {
+  color: var(--gold);
+  /* Make inline code gold */
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.concept-content-area pre code {
+  color: var(--foreground);
+  /* Ensure code block text is foreground color */
+  background-color: transparent;
+  padding: 0;
+  font-size: 1em;
+}
+
+.concept-content-area a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.concept-content-area a:hover {
+  text-decoration: none;
+  color: #e0ba6c;
+  text-shadow: 0 0 8px rgba(204, 156, 66, 0.5);
+}
+
+.concept-content-area ul,
+.concept-content-area ol {
+  padding-left: 1.5rem;
+  /* Indentation for lists */
+  margin-bottom: 1.5rem;
+}
+
+.concept-content-area li {
+  margin-bottom: 0.5rem;
+}
+
+.concept-content-area strong {
+  color: var(--gold);
+}
+
+.concept-content-area blockquote {
+  border-left: 3px solid var(--gold);
+  padding-left: 1rem;
+  margin-left: 0;
+  color: #a0a0a0;
+  background: rgba(26, 26, 26, 0.3);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.concept-content-area hr {
+  margin: 2rem auto;
+  /* More vertical space for HR */
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* --- Explicit List Styling within Concept Area --- */
+.concept-content-area ul,
+.concept-content-area ol {
+  padding-left: 1.8rem;
+  /* Ensure consistent list indentation base */
+  margin-bottom: 1rem;
+  /* Match paragraph spacing */
+}
+
+/* Ensure unordered lists use bullets */
+.concept-content-area ul {
+  list-style-type: disc;
+}
+
+/* Ensure ordered lists use numbers */
+.concept-content-area ol {
+  list-style-type: decimal;
+}
+
+/* Individual list item styling (if needed beyond margin in component) */
+.concept-content-area li {
+  margin-bottom: 0.5rem;
+  /* Spacing between items */
+  /* Note: Left margin for nesting is handled by inline style in SentenceItem */
 }

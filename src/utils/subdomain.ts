@@ -1,21 +1,29 @@
 import titleConfig, { TitleConfig } from '../config/titles';
 
 /**
- * Parses a hostname to extract the subdomain
- * @param hostname The full hostname (e.g., 'muse.ab2.observer')
+ * Parses a hostname to extract the subdomain, handling localhost cases.
+ * @param hostname The full hostname (e.g., 'w.localhost:3000' or 'muse.ab2.observer')
  * @returns The subdomain part of the URL or null if on main domain
  */
 export function parseSubdomain(hostname: string): string | null {
-  // Extract subdomain pattern
-  // For example, from "muse.ab2.observer" we want to extract "muse"
-  const hostParts = hostname.split('.');
+  // Remove port number if present (e.g., localhost:3000 -> localhost)
+  const domain = hostname.includes(':') ? hostname.split(':')[0] : hostname;
+  const hostParts = domain.split('.');
 
-  // No subdomain if we don't have enough parts (e.g., "ab2.observer")
-  if (hostParts.length < 3) {
-    return null;
+  // Handle localhost development case: e.g., w.localhost -> ['w', 'localhost'] (length 2)
+  if (domain.includes('localhost')) {
+    if (hostParts.length === 2 && hostParts[0] !== 'localhost') {
+      return hostParts[0];
+    }
+    return null; // localhost itself or invalid format
   }
 
-  // Return the first part as the subdomain
+  // Handle production/standard domain case: e.g., w.ab2.observer -> ['w', 'ab2', 'observer'] (length 3)
+  if (hostParts.length < 3) {
+    return null; // Not enough parts for a subdomain on a non-localhost domain
+  }
+
+  // Assume the first part is the subdomain
   return hostParts[0];
 }
 

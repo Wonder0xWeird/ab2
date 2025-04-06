@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { MongoDBClient, Nonce } from '@/utils/mongodb';
+import { MongoDBClient } from '@/utils/mongodb/client';
+import { AuthNonce } from '@/utils/mongodb';
 
 export async function GET() {
   try {
@@ -11,13 +12,16 @@ export async function GET() {
     // Generate a random UUID for the nonce
     const nonce = uuidv4();
     const timestamp = Math.floor(Date.now() / 1000);
+    const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
     // Store the nonce with an expiration (10 minutes)
-    await Nonce.create({
+    const nonceDoc = new AuthNonce({
       nonce,
       timestamp,
-      expires: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes expiration
+      expires,
+      createdAt: new Date(),
     });
+    await nonceDoc.save();
 
     // Return the nonce to the client
     return NextResponse.json({
