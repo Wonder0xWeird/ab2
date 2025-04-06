@@ -4,11 +4,12 @@ import { authOptions } from '@/utils/auth/authOptions';
 import { MongoDBClient } from '@/utils/mongodb/client';
 import { Draft, Sentence, ISentence } from '@/utils/mongodb/models';
 import { DraftType } from '@/utils/mongodb/schemas/draft.schema';
-// Import the markdown parsing utility
+import mongoose, { ClientSession, Document } from 'mongoose';
 import { parseMarkdownToSentences, ParsedSentence } from '@/utils/parsing/markdownParser';
+import { IConcept } from '@/utils/mongodb/models';
 
 // Helper function for authorization
-async function authorizeAdmin(request: Request) {
+async function authorizeAdmin(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== 'superadmin') {
     return { authorized: false, session: null };
@@ -26,7 +27,8 @@ export async function POST(request: Request) {
   let body;
   try {
     body = await request.json();
-  } catch (e) {
+  } catch (parseError: unknown) {
+    console.error('Error parsing request body:', parseError);
     return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 });
   }
 
@@ -75,7 +77,7 @@ export async function POST(request: Request) {
         .select('sid')
         .session(dbSession)
         .lean();
-      let nextSid = lastSentence ? lastSentence.sid + 1 : 0;
+      const nextSid = lastSentence ? lastSentence.sid + 1 : 0;
       const originalNextSid = nextSid; // Keep track of the starting SID for this batch
 
       // 2. Parse the markdown content into Sentence objects using the utility
@@ -118,10 +120,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, message: 'Draft published successfully', sentencesAdded });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error publishing draft ${draftId}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to publish draft';
     return NextResponse.json(
-      { success: false, error: "Failed to publish draft", details: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   } finally {

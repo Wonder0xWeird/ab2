@@ -22,6 +22,8 @@ declare module 'next-auth' {
       address: string;
       /** The user's role. */
       role: UserRole;
+      /** Custom JWT token */
+      authToken?: string | null;
     } & DefaultSession['user'] // Include default fields like name, email, image if needed
   }
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { MongoDBClient } from '@/utils/mongodb/client';
 import { Concept } from '@/utils/mongodb/models';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const mongoClient = MongoDBClient.getInstance();
     await mongoClient.connect();
@@ -27,4 +27,9 @@ export async function GET(request: Request) {
 // Optional: Add OPTIONS handler if needed for CORS, though likely not necessary for same-origin requests
 // export async function OPTIONS(request: Request) {
 //   return new NextResponse(null, { status: 204 });
-// } 
+// }
+
+// POST handler for creating a new concept - no request needed if not used
+export async function POST(request: Request) {
+  // ... implementation ...
+} 
