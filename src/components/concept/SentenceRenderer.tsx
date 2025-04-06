@@ -127,9 +127,14 @@ export default function SentenceRenderer({ cid }: SentenceRendererProps) {
       }
       setNextSid(data.nextSid);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching sentences:", err);
-      setError(err.message);
+      // Type check before accessing properties
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
       if (!initialLoadComplete) {
@@ -156,7 +161,7 @@ export default function SentenceRenderer({ cid }: SentenceRendererProps) {
       console.log('Intersection observer trigger in view, fetching more...');
       fetchSentences(nextSid);
     }
-  }, [initialLoadComplete, isLoading, nextSid, inView, fetchSentences]); // fetchSentences is stable due to useCallback
+  }, [initialLoadComplete, isLoading, nextSid, inView, fetchSentences]); // Add fetchSentences dependency
 
   // --- Rendering Logic with List Grouping --- 
   const renderedElements = sentences.reduce<React.ReactNode[]>((acc, sentence, index) => {

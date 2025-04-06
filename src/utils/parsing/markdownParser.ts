@@ -2,7 +2,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import { visit, SKIP } from 'unist-util-visit';
 import { toString as nodeToString } from 'mdast-util-to-string';
-import { Root, Content, List, ListItem, Code, Paragraph, Heading, Blockquote, ThematicBreak, Parent, Node as UnistNode } from 'mdast';
+import { Root, List, ListItem, Code, Paragraph, Heading, Blockquote, Parent, Node as UnistNode } from 'mdast';
 import { ISentence } from '@/utils/mongodb/models';
 import { MarkdownType, ISentenceMetadata } from '@/utils/mongodb/schemas/sentence.schema';
 
