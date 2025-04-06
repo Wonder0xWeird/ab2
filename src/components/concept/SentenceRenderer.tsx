@@ -161,7 +161,7 @@ export default function SentenceRenderer({ cid }: SentenceRendererProps) {
       console.log('Intersection observer trigger in view, fetching more...');
       fetchSentences(nextSid);
     }
-  }, [initialLoadComplete, isLoading, nextSid, inView, fetchSentences]); // Add fetchSentences dependency
+  }, [initialLoadComplete, isLoading, nextSid, inView, fetchSentences]);
 
   // --- Rendering Logic with List Grouping --- 
   const renderedElements = sentences.reduce<React.ReactNode[]>((acc, sentence, index) => {

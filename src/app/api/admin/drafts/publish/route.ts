@@ -4,12 +4,10 @@ import { authOptions } from '@/utils/auth/authOptions';
 import { MongoDBClient } from '@/utils/mongodb/client';
 import { Draft, Sentence, ISentence } from '@/utils/mongodb/models';
 import { DraftType } from '@/utils/mongodb/schemas/draft.schema';
-import mongoose, { ClientSession, Document } from 'mongoose';
 import { parseMarkdownToSentences, ParsedSentence } from '@/utils/parsing/markdownParser';
-import { IConcept } from '@/utils/mongodb/models';
 
 // Helper function for authorization
-async function authorizeAdmin(req: Request) {
+async function authorizeAdmin() {
   const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== 'superadmin') {
     return { authorized: false, session: null };
@@ -19,7 +17,7 @@ async function authorizeAdmin(req: Request) {
 
 // POST: Publish a specific draft by ID
 export async function POST(request: Request) {
-  const { authorized, session } = await authorizeAdmin(request);
+  const { authorized, session } = await authorizeAdmin();
   if (!authorized || !session?.user?.address) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }

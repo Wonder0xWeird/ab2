@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/utils/auth/authOptions';
 import { MongoDBClient } from '@/utils/mongodb/client';
 import { Sentence, ISentence, Concept } from '@/utils/mongodb/models';
 

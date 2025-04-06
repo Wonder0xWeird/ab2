@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
 import { MongoDBClient } from '@/utils/mongodb/client';
-import { AuthNonce, User, UserRole, IUser } from '@/utils/mongodb'; // Import User model and role enum
+import { AuthNonce, User, UserRole } from '@/utils/mongodb/models';
 import { generateAuthToken } from "./middleware";
 
 // Define the main domain as a constant to ensure consistency

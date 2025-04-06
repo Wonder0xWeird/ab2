@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/auth/authOptions';
 import { MongoDBClient } from '@/utils/mongodb/client';
-import { Draft, IDraft, UserRole } from '@/utils/mongodb/models';
-import { Types } from 'mongoose';
+import { Draft, UserRole } from '@/utils/mongodb/models';
 
 // Define allowed draft types and statuses if not already imported
 type DraftType = 'concept' | 'thread'; // Example, adjust if needed
@@ -77,7 +76,7 @@ export async function POST(request: Request) {
 }
 
 // GET handler for retrieving drafts (e.g., for a specific concept or user)
-export async function GET(request: Request) {
+export async function GET(/* request: Request */) {
   console.log("GET /api/admin/drafts called");
   const session = await getServerSession(authOptions);
 

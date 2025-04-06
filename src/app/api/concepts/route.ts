@@ -29,7 +29,14 @@ export async function GET() {
 //   return new NextResponse(null, { status: 204 });
 // }
 
-// POST handler for creating a new concept - no request needed if not used
-export async function POST(request: Request) {
-  // ... implementation ...
+// POST handler for creating a new concept
+// Remove unused request parameter
+export async function POST(/* request: Request */) {
+  // Comment out placeholder implementation
+  /*
+  // const { cid, title, description, tags, initialContent } = await request.json(); 
+  // ... actual implementation would go here ...
+  */
+  console.warn("POST /api/concepts not fully implemented yet.");
+  return NextResponse.json({ success: false, error: "Not Implemented" }, { status: 501 });
 } 

@@ -1,7 +1,8 @@
-import { Module } from 'module'; // Assuming this is the type for module
-import { DefaultSession, User as DefaultUser, Session, JWT as DefaultJWT } from 'next-auth';
-// Remove unused JWT import from \"next-auth/jwt\"
-// import { JWT } from \"next-auth/jwt\";
+// Remove unused Module import
+// import { Module } from 'module'; // Assuming this is the type for module
+// Remove unused Session import
+import { DefaultSession, User as DefaultUser, JWT as DefaultJWT } from 'next-auth';
+// import { DefaultSession, User as DefaultUser, Session, JWT as DefaultJWT } from 'next-auth';
 import { UserRole } from "@/utils/mongodb"; // Import UserRole enum
 
 // Define enum for User Roles if not already defined elsewhere

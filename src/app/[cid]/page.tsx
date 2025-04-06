@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'; // Import useSession
-import { Concept, IConcept } from '@/utils/mongodb/models';
+// Remove unused Concept import
+import { IConcept } from '@/utils/mongodb/models';
+// import { Concept, IConcept } from '@/utils/mongodb/models';
 // Keep MongoDBClient import if needed for client-side fallback, otherwise remove
 // import { MongoDBClient } from '@/utils/mongodb/client';
 import { notFound, useParams } from 'next/navigation'; // Use client-side navigation hooks

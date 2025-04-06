@@ -68,6 +68,7 @@ export function parseMarkdownToSentences(markdown: string, conceptCid: string): 
     // --- Process Content Nodes ---
     let sentenceType: MarkdownType | null = null;
     let content = '';
+    // eslint-disable-next-line prefer-const
     let metadata: ISentenceMetadata = {};
     let addSentence = false;
     let skipChildren = false;

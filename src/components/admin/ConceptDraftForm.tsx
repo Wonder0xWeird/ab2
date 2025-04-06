@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import "@uiw/react-md-editor/markdown-editor.css";
-import { IDraft } from '@/utils/mongodb/models';
 
 // Dynamically import the Markdown editor
 const MDEditor = dynamic(
